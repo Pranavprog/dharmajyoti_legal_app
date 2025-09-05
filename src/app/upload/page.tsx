@@ -54,6 +54,13 @@ export default function UploadPage() {
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = useTranslations();
+  
+  const form = useForm<ChatForm>({
+    resolver: zodResolver(chatSchema),
+    defaultValues: {
+      message: '',
+    },
+  });
 
   useEffect(() => {
     setMessages([
