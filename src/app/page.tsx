@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Bot, Search, Scale, ShieldCheck } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import React, { useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -65,12 +65,14 @@ export default function Home() {
 function FeatureCard({ title, description, href, icon }: (typeof features)[0]) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full flex flex-col items-center justify-center text-center p-6 bg-card/80 backdrop-blur-sm shadow-lg transition-transform duration-300 group-hover:scale-105">
-        <div className="mb-4 text-primary">{icon}</div>
-        <CardTitle className="text-xl font-bold">{title}</CardTitle>
-        <CardContent className="p-0 mt-2 text-sm text-foreground/70">
-          <p>{description}</p>
-        </CardContent>
+      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg transition-transform duration-300 group-hover:scale-105 neon-glow">
+        <div className="card-content-inner flex flex-col items-center justify-center text-center p-6 h-full">
+            <div className="mb-4 text-primary">{icon}</div>
+            <CardTitle className="text-xl font-bold">{title}</CardTitle>
+            <CardContent className="p-0 mt-2 text-sm text-foreground/70">
+              <p>{description}</p>
+            </CardContent>
+        </div>
       </Card>
     </Link>
   );
