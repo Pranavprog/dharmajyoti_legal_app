@@ -6,3 +6,4 @@ import '@/ai/flows/list-pros-cons-consequences-of-action.ts';
 import '@/ai/flows/assess-clause-and-provide-explanations.ts';
 import '@/ai/flows/summarize-uploaded-document.ts';
 import '@/ai/flows/interactive-legal-guidance.ts';
+import '@/ai/flows/extract-document-text.ts';

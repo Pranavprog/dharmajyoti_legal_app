@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 
 interface FileUploaderProps {
-  onFileLoad: (content: string, name: string) => void;
+  onFileLoad: (file: File) => void;
   disabled?: boolean;
 }
 
@@ -25,21 +25,16 @@ export function FileUploader({ onFileLoad, disabled }: FileUploaderProps) {
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [isPdfAlertOpen, setIsPdfAlertOpen] = React.useState(false);
+  const [pdfFile, setPdfFile] = React.useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type === 'application/pdf') {
+        setPdfFile(file);
         setIsPdfAlertOpen(true);
-        // We will show an alert and not process the file here.
-        // User will be informed about server-side processing.
       } else if (file.type.startsWith('text/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const text = e.target?.result as string;
-          onFileLoad(text, file.name);
-        };
-        reader.readAsText(file);
+        onFileLoad(file);
       } else {
         toast({
           variant: 'destructive',
@@ -53,6 +48,14 @@ export function FileUploader({ onFileLoad, disabled }: FileUploaderProps) {
         fileInputRef.current.value = '';
     }
   };
+  
+  const handlePdfConfirm = () => {
+    if (pdfFile) {
+        onFileLoad(pdfFile);
+    }
+    setIsPdfAlertOpen(false);
+    setPdfFile(null);
+  }
 
   return (
     <>
@@ -82,7 +85,7 @@ export function FileUploader({ onFileLoad, disabled }: FileUploaderProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setIsPdfAlertOpen(false)}>
+            <AlertDialogAction onClick={handlePdfConfirm}>
               Got it
             </AlertDialogAction>
           </AlertDialogFooter>

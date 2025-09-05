@@ -9,7 +9,6 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarInset,
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -25,7 +24,9 @@ import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance'
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BotMessageSquare, UploadCloud } from 'lucide-react';
+import { BotMessageSquare } from 'lucide-react';
+import { processPdf } from '@/services/pdf-service';
+
 
 export interface Message {
   role: 'user' | 'assistant';
@@ -51,7 +52,7 @@ export default function Home() {
     {
       role: 'assistant',
       content:
-        "Hello! I'm LegaliAI, your personal legal assistant. You can upload a document for analysis or start by asking me a legal question.",
+        "Hello! I'm DharmaJyoti, your personal legal assistant. You can upload a document for analysis or start by asking me a legal question.",
     },
   ]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -65,16 +66,28 @@ export default function Home() {
     },
   });
 
-  const handleFileLoad = async (content: string, name: string) => {
+  const handleFileLoad = async (file: File) => {
     setIsAnalyzing(true);
-    setDocument({ name, content });
+    setDocument({ name: file.name, content: 'Processing PDF...' });
     setAnalysis(null);
     setMessages([]);
 
     try {
+      let textContent = '';
+      if (file.type === 'application/pdf') {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfData = Buffer.from(arrayBuffer).toString('base64');
+        const result = await processPdf({ dataUri: `data:application/pdf;base64,${pdfData}` });
+        textContent = result.text;
+      } else {
+        textContent = await file.text();
+      }
+
+      setDocument({ name: file.name, content: textContent });
+
       const [summaryRes, typeRes] = await Promise.all([
-        summarizeUploadedDocument({ documentText: content }),
-        identifyDocumentTypeAndPurpose({ documentText: content }),
+        summarizeUploadedDocument({ documentText: textContent }),
+        identifyDocumentTypeAndPurpose({ documentText: textContent }),
       ]);
 
       if (summaryRes && typeRes) {
@@ -86,7 +99,7 @@ export default function Home() {
         setMessages([
           {
             role: 'assistant',
-            content: `I've analyzed your document, "${name}". You can see a summary and analysis under the "Analysis" tab. What would you like to know about it?`,
+            content: `I've analyzed your document, "${file.name}". You can see a summary and analysis under the "Analysis" tab. What would you like to know about it?`,
           },
         ]);
       } else {
@@ -169,7 +182,7 @@ User's question: "${userInput}"
                         <div className="mx-auto mb-4 bg-primary/10 p-3 rounded-full w-fit">
                             <BotMessageSquare className="h-8 w-8 text-primary" />
                         </div>
-                        <CardTitle>Welcome to LegaliAI</CardTitle>
+                        <CardTitle>Welcome to DharmaJyoti</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <ChatPanel

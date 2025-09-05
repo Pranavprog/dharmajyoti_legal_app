@@ -6,7 +6,7 @@ export function Logo() {
       <div className="bg-primary p-2 rounded-lg">
         <Scale className="h-6 w-6 text-primary-foreground" />
       </div>
-      <h1 className="text-xl font-bold tracking-tight">LegaliAI</h1>
+      <h1 className="text-xl font-bold tracking-tight">DharmaJyoti</h1>
     </div>
   );
 }
