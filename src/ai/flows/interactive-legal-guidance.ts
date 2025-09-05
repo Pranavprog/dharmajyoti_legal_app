@@ -5,7 +5,7 @@
  *
  * - interactiveLegalGuidance - An async function that takes a user's question as input and returns legal guidance.
  * - InteractiveLegalGuidanceInput - The input type for the interactiveLegalGuidance function (a string).
- * - InteractiveLegalGuidanceOutput - The return type for the interactiveLegalGuidance function (a string).
+ * - InteractiveLegalGuidanceOutput - The return type for the interactiveLegalGuidanceOutput function (a string).
  */
 
 import {ai} from '@/ai/genkit';
@@ -34,7 +34,7 @@ export async function interactiveLegalGuidance(
 const interactiveLegalGuidancePrompt = ai.definePrompt({
   name: 'interactiveLegalGuidancePrompt',
   input: {schema: InteractiveLegalGuidanceInputSchema},
-  output: {schema: InteractiveLegalGuidanceOutputSchema},
+  output: {schema: InteractiveLegalGuidanceOutputSchema.nullable()},
   prompt: `You are MiniLawyer, an AI assistant that scans user-provided text (contracts, agreements, or problem descriptions) and returns short, clear, everyday-language answers.
 
 You must always adapt your responses to the user’s local law (city, district, state, country).
