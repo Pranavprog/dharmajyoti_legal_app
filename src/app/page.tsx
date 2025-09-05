@@ -1,238 +1,93 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileUploader } from '@/components/file-uploader';
-import { Logo } from '@/components/logo';
-import { ChatPanel } from '@/components/chat/chat-panel';
-import { DocumentViewer } from '@/components/document/document-viewer';
-import { DocumentAnalysis } from '@/components/document/document-analysis';
+import Link from 'next/link';
+import { ArrowRight, Bot, Search, Scale, ShieldCheck } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { summarizeUploadedDocument } from '@/ai/flows/summarize-uploaded-document';
-import { identifyDocumentTypeAndPurpose } from '@/ai/flows/identify-document-type-and-purpose';
-import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BotMessageSquare } from 'lucide-react';
-import { processPdf } from '@/services/pdf-service';
-
-
-export interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-}
-
-export interface Analysis {
-  summary: string;
-  documentType: string;
-  purpose: string;
-  keywords: string[];
-}
-
-const chatSchema = z.object({
-  message: z.string().min(1, 'Message cannot be empty'),
-});
-
-type ChatForm = z.infer<typeof chatSchema>;
+const features = [
+  {
+    title: 'Upload and Scan',
+    description: 'Upload your legal documents for a comprehensive AI-powered analysis.',
+    href: '/upload',
+    icon: <Scale className="h-10 w-10" />,
+  },
+  {
+    title: 'Mini Lawyer Support',
+    description: 'Get instant answers to your legal questions from our AI assistant.',
+    href: '/lawyer',
+    icon: <Bot className="h-10 w-10" />,
+  },
+  {
+    title: 'See Future',
+    description: 'Understand the potential pros, cons, and consequences of your legal actions.',
+    href: '/future',
+    icon: <Search className="h-10 w-10" />,
+  },
+  {
+    title: 'Spot Trap',
+    description: 'Identify risky clauses and unfair terms in your documents.',
+    href: '/tbd',
+    icon: <ShieldCheck className="h-10 w-10" />,
+  },
+];
 
 export default function Home() {
-  const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
-  const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'assistant',
-      content:
-        "Hello! I'm DharmaJyoti, your personal legal assistant. You can upload a document for analysis or start by asking me a legal question.",
-    },
-  ]);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isChatting, setIsChatting] = useState(false);
-  const { toast } = useToast();
-
-  const form = useForm<ChatForm>({
-    resolver: zodResolver(chatSchema),
-    defaultValues: {
-      message: '',
-    },
-  });
-
-  const handleFileLoad = async (file: File) => {
-    setIsAnalyzing(true);
-    setDocument({ name: file.name, content: 'Processing PDF...' });
-    setAnalysis(null);
-    setMessages([]);
-
-    try {
-      let textContent = '';
-      if (file.type === 'application/pdf') {
-        const arrayBuffer = await file.arrayBuffer();
-        const pdfData = Buffer.from(arrayBuffer).toString('base64');
-        const result = await processPdf({ dataUri: `data:application/pdf;base64,${pdfData}` });
-        textContent = result.text;
-      } else {
-        textContent = await file.text();
-      }
-
-      setDocument({ name: file.name, content: textContent });
-
-      const [summaryRes, typeRes] = await Promise.all([
-        summarizeUploadedDocument({ documentText: textContent }),
-        identifyDocumentTypeAndPurpose({ documentText: textContent }),
-      ]);
-
-      if (summaryRes && typeRes) {
-        setAnalysis({
-          summary: summaryRes.summary,
-          documentType: typeRes.documentType,
-          purpose: typeRes.purpose,
-          keywords: summaryRes.keywords,
-        });
-        setMessages([
-          {
-            role: 'assistant',
-            content: `I've analyzed your document, "${file.name}". You can see a summary and analysis under the "Analysis" tab. What would you like to know about it?`,
-          },
-        ]);
-      } else {
-        throw new Error('Failed to analyze document.');
-      }
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: 'destructive',
-        title: 'Analysis Failed',
-        description: 'There was an error analyzing your document. Please try again.',
-      });
-      setDocument(null);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  const handleSendMessage = async (data: ChatForm) => {
-    setIsChatting(true);
-    const userInput = data.message;
-    const newMessages: Message[] = [...messages, { role: 'user', content: userInput }];
-    setMessages(newMessages);
-    form.reset();
-
-    try {
-      let guidanceInput = userInput;
-      if (document) {
-        guidanceInput = `The user has uploaded a document named "${document.name}".
-        
-Document content:
----
-${document.content}
----
-
-User's question: "${userInput}"
-        `;
-      }
-      const response = await interactiveLegalGuidance(guidanceInput);
-      setMessages([...newMessages, { role: 'assistant', content: response }]);
-    } catch (error) {
-      console.error(error);
-      setMessages([
-        ...newMessages,
-        {
-          role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again.',
-        },
-      ]);
-    } finally {
-      setIsChatting(false);
-    }
-  };
-
   return (
-    <SidebarProvider>
-      <div className="grid h-screen w-full lg:grid-cols-[300px_1fr]">
-        <Sidebar className="hidden lg:flex lg:flex-col bg-card border-r">
-          <SidebarHeader className="border-b">
-            <Logo />
-          </SidebarHeader>
-          <SidebarContent>
-            <div className="p-4">
-              <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
+    <main className="flex-1">
+      <section className="relative w-full py-20 md:py-32 lg:py-40">
+        <div className="container px-4 md:px-6 text-center">
+            <div className="max-w-3xl mx-auto">
+                <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl text-primary">
+                    DharmaJyoti
+                </h1>
+                <p className="mt-4 text-lg text-foreground/80 md:text-xl">
+                    Your AI-powered legal assistant to help you navigate complex documents with confidence.
+                </p>
             </div>
-          </SidebarContent>
-        </Sidebar>
-        <div className="flex flex-col">
-          <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-card px-4 sm:h-[60px] sm:px-6">
-            <SidebarTrigger className="lg:hidden" />
-            <h1 className="flex-1 text-xl font-semibold truncate">
-              {document ? document.name : 'DharmaJyoti'}
-            </h1>
-          </header>
-          <main className="flex flex-1 flex-col gap-4 overflow-auto bg-background p-4 sm:p-6">
-            {!document ? (
-              <div className="flex h-full items-center justify-center">
-                <Card className="w-full max-w-2xl shadow-lg">
-                    <CardHeader className="text-center">
-                        <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
-                            <BotMessageSquare className="h-8 w-8 text-primary" />
-                        </div>
-                        <CardTitle className="text-3xl">Welcome to DharmaJyoti</CardTitle>
-                        <CardDescription>Your AI-powered legal assistant. Upload a document or ask a question to get started.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ChatPanel
-                            messages={messages}
-                            isLoading={isChatting}
-                            onSendMessage={handleSendMessage}
-                            form={form}
-                            placeholder="Ask a legal question..."
-                        />
-                         <div className="lg:hidden mt-6">
-                            <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
-                        </div>
-                    </CardContent>
+        </div>
+      </section>
+
+      <section className="container px-4 md:px-6 pb-20">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature) => (
+            <FeatureCard key={feature.title} {...feature} />
+          ))}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function FeatureCard({ title, description, href, icon }: (typeof features)[0]) {
+    return (
+        <div className="group perspective">
+          <Link href={href}>
+            <div className="relative h-full w-full rounded-xl shadow-xl transition-all duration-500 preserve-3d group-hover:rotate-y-180">
+              {/* Front of the card */}
+              <div className="absolute inset-0 backface-hidden rounded-xl border bg-card text-card-foreground">
+                <Card className="h-full w-full flex flex-col items-center justify-center text-center p-6 bg-transparent border-none">
+                  <div className="mb-4 text-primary">{icon}</div>
+                  <CardTitle className="text-xl font-bold">{title}</CardTitle>
+                  <CardContent className="p-0 mt-2 text-sm text-foreground/70">
+                    <p>{description}</p>
+                  </CardContent>
                 </Card>
               </div>
-            ) : (
-              <div className="grid h-full gap-6 md:grid-cols-2">
-                <div className="flex flex-col gap-4 h-full min-h-[400px]">
-                    <h2 className="text-2xl font-semibold">Document Viewer</h2>
-                    <DocumentViewer content={document.content} />
-                </div>
-                <div className="flex flex-col gap-4 h-full min-h-[400px]">
-                  <Tabs defaultValue="analysis" className="flex flex-col h-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="analysis">Analysis</TabsTrigger>
-                      <TabsTrigger value="chat">Chat</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="analysis" className="flex-1 overflow-auto">
-                      <DocumentAnalysis analysis={analysis} isLoading={isAnalyzing} />
-                    </TabsContent>
-                    <TabsContent value="chat" className="flex-1 overflow-auto">
-                      <div className="h-full rounded-lg border bg-card text-card-foreground shadow-sm">
-                        <ChatPanel
-                          messages={messages}
-                          isLoading={isChatting}
-                          onSendMessage={handleSendMessage}
-                          form={form}
-                          placeholder="Ask about your document..."
-                        />
-                      </div>
-                    </TabsContent>
-                  </Tabs>
-                </div>
+
+              {/* Back of the card */}
+              <div className="absolute inset-0 backface-hidden rounded-xl border bg-primary text-primary-foreground rotate-y-180">
+                <Card className="h-full w-full flex flex-col items-center justify-center text-center p-6 bg-transparent border-none">
+                    <div className="mb-4 text-primary-foreground">{icon}</div>
+                    <CardTitle className="text-xl font-bold">{title}</CardTitle>
+                    <p className="mt-4 text-center">Click to explore this feature</p>
+                    <div className="mt-4 flex items-center justify-center text-lg font-semibold">
+                        <span>Learn More</span>
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                    </div>
+                </Card>
               </div>
-            )}
-          </main>
+            </div>
+          </Link>
         </div>
-      </div>
-    </SidebarProvider>
-  );
+    );
 }

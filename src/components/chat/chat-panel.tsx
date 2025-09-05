@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { ChatMessage } from './chat-message';
-import type { Message } from '@/app/page';
+import type { Message } from '@/app/upload/page';
 
 interface ChatPanelProps {
   messages: Message[];
