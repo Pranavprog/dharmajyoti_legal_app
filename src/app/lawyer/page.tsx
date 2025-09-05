@@ -5,10 +5,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChatPanel } from '@/components/chat/chat-panel';
-import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
+import { interactiveLegalGuidance, InteractiveLegalGuidanceInput } from '@/ai/flows/interactive-legal-guidance';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BotMessageSquare } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 
 export interface Message {
   role: 'user' | 'assistant';
@@ -23,11 +24,11 @@ type ChatForm = z.infer<typeof chatSchema>;
 
 export default function LawyerPage() {
   const { language } = useLanguage();
+  const t = useTranslations();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content:
-        "Hello! I'm your Mini Lawyer assistant. Paste in a clause or describe a situation, and tell me your location (city/state/country). I'll give you a quick, simple analysis based on local laws.",
+      content: t.lawyer.initialMessage,
     },
   ]);
   const [isChatting, setIsChatting] = useState(false);
@@ -47,15 +48,16 @@ export default function LawyerPage() {
     form.reset();
 
     try {
-      const response = await interactiveLegalGuidance({ message: userInput, language });
-      setMessages([...newMessages, { role: 'assistant', content: response ?? "I'm sorry, I couldn't process that. Could you try rephrasing?" }]);
+      const input: InteractiveLegalGuidanceInput = { message: userInput, language };
+      const response = await interactiveLegalGuidance(input);
+      setMessages([...newMessages, { role: 'assistant', content: response ?? t.common.error }]);
     } catch (error) {
       console.error(error);
       setMessages([
         ...newMessages,
         {
           role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again.',
+          content: t.common.error,
         },
       ]);
     } finally {
@@ -70,8 +72,8 @@ export default function LawyerPage() {
             <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
                 <BotMessageSquare className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-3xl">Mini Lawyer Support</CardTitle>
-            <CardDescription>Your AI-powered legal assistant.</CardDescription>
+            <CardTitle className="text-3xl">{t.lawyer.title}</CardTitle>
+            <CardDescription>{t.lawyer.description}</CardDescription>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden p-0">
             <ChatPanel
@@ -79,7 +81,7 @@ export default function LawyerPage() {
                 isLoading={isChatting}
                 onSendMessage={handleSendMessage}
                 form={form}
-                placeholder="Paste text here and include your location..."
+                placeholder={t.lawyer.placeholder}
             />
         </CardContent>
       </Card>

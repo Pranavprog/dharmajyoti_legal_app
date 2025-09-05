@@ -11,6 +11,7 @@ import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ThumbsUp, ThumbsDown, Lightbulb, Search, FileText, Volume2, Loader } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 
 export default function FuturePage() {
     const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
@@ -18,21 +19,22 @@ export default function FuturePage() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
     const { language } = useLanguage();
+    const t = useTranslations();
 
     const handleFileLoad = async (file: File) => {
         setIsAnalyzing(true);
-        setDocument({ name: file.name, content: 'Processing...' });
+        setDocument({ name: file.name, content: t.future.processing });
         setAnalysis(null);
 
         try {
             const arrayBuffer = await file.arrayBuffer();
             const dataUri = `data:${file.type};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
 
-            setDocument({ name: file.name, content: 'Extracting text...' });
+            setDocument({ name: file.name, content: t.future.extracting });
             const { text } = await extractDocumentText({ documentDataUri: dataUri });
             setDocument({ name: file.name, content: text });
             
-            setDocument(prev => ({ ...prev, name: prev.name, content: 'Generating scenarios...' }));
+            setDocument(prev => ({ ...prev, name: prev.name, content: t.future.generating }));
             const scenarios = await generateFutureScenarios({ documentText: text, language });
             setAnalysis(scenarios);
 
@@ -40,8 +42,8 @@ export default function FuturePage() {
             console.error(error);
             toast({
                 variant: 'destructive',
-                title: 'Analysis Failed',
-                description: 'There was an error analyzing your document. Please try again.',
+                title: t.toast.analysisFailed,
+                description: t.toast.analysisError,
             });
             setDocument(null);
         } finally {
@@ -56,8 +58,8 @@ export default function FuturePage() {
                     <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
                         <Search className="h-8 w-8 text-primary" />
                     </div>
-                    <CardTitle className="text-3xl">See the Future</CardTitle>
-                    <CardDescription>Upload a document to see potential best-case and worst-case scenarios.</CardDescription>
+                    <CardTitle className="text-3xl">{t.future.title}</CardTitle>
+                    <CardDescription>{t.future.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
@@ -70,8 +72,8 @@ export default function FuturePage() {
         <div className="w-full max-w-2xl">
             <Card className="shadow-xl text-center">
                 <CardHeader>
-                    <CardTitle className="text-2xl">Peering into the Future...</CardTitle>
-                    <CardDescription>Please wait while our AI analyzes potential outcomes based on your document.</CardDescription>
+                    <CardTitle className="text-2xl">{t.future.loadingTitle}</CardTitle>
+                    <CardDescription>{t.future.loadingDescription}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
@@ -88,11 +90,11 @@ export default function FuturePage() {
             <div className="md:col-span-1">
                 <Card className="shadow-lg sticky top-8">
                     <CardHeader>
-                        <CardTitle className="flex items-center gap-3"><FileText /> Document</CardTitle>
+                        <CardTitle className="flex items-center gap-3"><FileText /> {t.common.document}</CardTitle>
                         <CardDescription>{document?.name}</CardDescription>
                     </CardHeader>
                     <CardContent className="max-h-[60vh] overflow-y-auto">
-                        <p className="whitespace-pre-wrap text-sm text-foreground/80">{document?.content.startsWith("Generating scenarios") ? "Analysis in progress..." : document?.content}</p>
+                        <p className="whitespace-pre-wrap text-sm text-foreground/80">{document?.content.startsWith(t.future.generating) ? t.common.analysisInProgress : document?.content}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -102,17 +104,17 @@ export default function FuturePage() {
                 ) : analysis ? (
                     <>
                         <ScenarioCard
-                            title="Best Case Scenario"
+                            title={t.future.bestCase}
                             content={analysis.bestCase}
                             icon={<ThumbsUp className="text-green-500" />}
                         />
                         <ScenarioCard
-                            title="Worst Case Scenario"
+                            title={t.future.worstCase}
                             content={analysis.worstCase}
                             icon={<ThumbsDown className="text-red-500" />}
                         />
                          <ScenarioCard
-                            title="Advice"
+                            title={t.future.advice}
                             content={analysis.advice}
                             icon={<Lightbulb className="text-yellow-500" />}
                         />
@@ -141,6 +143,7 @@ export default function FuturePage() {
 
 function ScenarioCard({ title, content, icon }: { title: string, content: string, icon: React.ReactNode }) {
     const { toast } = useToast();
+    const t = useTranslations();
     const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
     const [audioData, setAudioData] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -167,8 +170,8 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
             console.error('Error generating audio:', error);
             toast({
                 variant: 'destructive',
-                title: 'Audio Generation Failed',
-                description: 'Could not generate audio for this section.',
+                title: t.toast.audioFailed,
+                description: t.toast.audioError,
             });
         } finally {
             setIsGeneratingAudio(false);
@@ -190,7 +193,7 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
                         size="icon"
                         onClick={() => handlePlayAudio(textToRead)}
                         disabled={isGeneratingAudio}
-                        aria-label="Listen to this section"
+                        aria-label={t.common.listen}
                     >
                         {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
                     </Button>

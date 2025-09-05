@@ -11,6 +11,7 @@ import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 
 export default function SpotTrapPage() {
   const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
@@ -18,17 +19,18 @@ export default function SpotTrapPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { toast } = useToast();
   const { language } = useLanguage();
+  const t = useTranslations();
 
   const handleFileLoad = async (file: File) => {
     setIsAnalyzing(true);
-    setDocument({ name: file.name, content: 'Processing...' });
+    setDocument({ name: file.name, content: t.spotTrap.processing });
     setAnalysis(null);
 
     try {
       const arrayBuffer = await file.arrayBuffer();
       const dataUri = `data:${file.type};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
       
-      setDocument({ name: file.name, content: 'Extracting text from document...' });
+      setDocument({ name: file.name, content: t.spotTrap.extracting });
       const { text } = await extractDocumentText({ documentDataUri: dataUri });
       
       setDocument({ name: file.name, content: text });
@@ -40,8 +42,8 @@ export default function SpotTrapPage() {
       console.error(error);
       toast({
         variant: 'destructive',
-        title: 'Analysis Failed',
-        description: 'There was an error analyzing your document. Please try again.',
+        title: t.toast.analysisFailed,
+        description: t.toast.analysisError,
       });
       setDocument(null);
     } finally {
@@ -56,8 +58,8 @@ export default function SpotTrapPage() {
                 <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
                     <ShieldCheck className="h-8 w-8 text-primary" />
                 </div>
-                <CardTitle className="text-3xl">Spot Trap</CardTitle>
-                <CardDescription>Upload your document to identify potential loopholes, problems, and cautionary clauses.</CardDescription>
+                <CardTitle className="text-3xl">{t.spotTrap.title}</CardTitle>
+                <CardDescription>{t.spotTrap.description}</CardDescription>
             </CardHeader>
             <CardContent>
                 <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
@@ -70,8 +72,8 @@ export default function SpotTrapPage() {
     <div className="w-full max-w-2xl">
       <Card className="shadow-xl text-center">
         <CardHeader>
-          <CardTitle className="text-2xl">Analyzing Document</CardTitle>
-          <CardDescription>Please wait while we scan your document for potential traps. This may take a moment.</CardDescription>
+          <CardTitle className="text-2xl">{t.spotTrap.loadingTitle}</CardTitle>
+          <CardDescription>{t.spotTrap.loadingDescription}</CardDescription>
         </CardHeader>
         <CardContent>
             <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
@@ -88,7 +90,7 @@ export default function SpotTrapPage() {
         <div className="md:col-span-1">
             <Card className="shadow-lg sticky top-8">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><FileText /> Document</CardTitle>
+                    <CardTitle className="flex items-center gap-3"><FileText /> {t.common.document}</CardTitle>
                     <CardDescription>{document?.name}</CardDescription>
                 </CardHeader>
                 <CardContent className="max-h-[60vh] overflow-y-auto">
@@ -101,9 +103,9 @@ export default function SpotTrapPage() {
                 <AnalysisSkeleton />
             ) : analysis ? (
                 <>
-                    <ResultSection title="Loopholes" items={analysis.loopholes} icon={<Siren className="text-yellow-500" />} />
-                    <ResultSection title="Potential Problems" items={analysis.problems} icon={<AlertTriangle className="text-orange-500" />} />
-                    <ResultSection title="Cautions" items={analysis.cautions} icon={<Lightbulb className="text-blue-500" />} />
+                    <ResultSection title={t.spotTrap.loopholes} items={analysis.loopholes} icon={<Siren className="text-yellow-500" />} />
+                    <ResultSection title={t.spotTrap.problems} items={analysis.problems} icon={<AlertTriangle className="text-orange-500" />} />
+                    <ResultSection title={t.spotTrap.cautions} items={analysis.cautions} icon={<Lightbulb className="text-blue-500" />} />
                 </>
             ) : null}
         </div>
@@ -134,6 +136,7 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
     }
     
     const { toast } = useToast();
+    const t = useTranslations();
     const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
     const [audioData, setAudioData] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -160,8 +163,8 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
             console.error('Error generating audio:', error);
             toast({
                 variant: 'destructive',
-                title: 'Audio Generation Failed',
-                description: 'Could not generate audio for this section.',
+                title: t.toast.audioFailed,
+                description: t.toast.audioError,
             });
         } finally {
             setIsGeneratingAudio(false);
@@ -183,7 +186,7 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
                         size="icon"
                         onClick={() => handlePlayAudio(textToRead)}
                         disabled={isGeneratingAudio}
-                        aria-label="Listen to this section"
+                        aria-label={t.common.listen}
                     >
                         {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
                     </Button>

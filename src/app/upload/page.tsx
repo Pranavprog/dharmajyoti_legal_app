@@ -11,7 +11,7 @@ import { DocumentViewer } from '@/components/document/document-viewer';
 import { DocumentAnalysis } from '@/components/document/document-analysis';
 import { summarizeUploadedDocument } from '@/ai/flows/summarize-uploaded-document';
 import { identifyDocumentTypeAndPurpose } from '@/ai/flows/identify-document-type-and-purpose';
-import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
+import { interactiveLegalGuidance, InteractiveLegalGuidanceInput } from '@/ai/flows/interactive-legal-guidance';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -19,6 +19,7 @@ import { BotMessageSquare, Camera, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
 import { useLanguage } from '@/context/language-context';
+import { useTranslations } from '@/hooks/use-translations';
 
 export interface Message {
   role: 'user' | 'assistant';
@@ -41,13 +42,7 @@ type ChatForm = z.infer<typeof chatSchema>;
 export default function UploadPage() {
   const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'assistant',
-      content:
-        "Hello! I'm DharmaJyoti, your personal legal assistant. Please upload a document or use your camera to begin the analysis.",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isChatting, setIsChatting] = useState(false);
   const [view, setView] = useState<'options' | 'camera' | 'upload'>('options');
@@ -58,13 +53,16 @@ export default function UploadPage() {
 
   const { toast } = useToast();
   const { language } = useLanguage();
+  const t = useTranslations();
 
-  const form = useForm<ChatForm>({
-    resolver: zodResolver(chatSchema),
-    defaultValues: {
-      message: '',
-    },
-  });
+  useEffect(() => {
+    setMessages([
+      {
+        role: 'assistant',
+        content: t.upload.initialMessage,
+      },
+    ]);
+  }, [t]);
 
   useEffect(() => {
     if (view !== 'camera') {
@@ -88,13 +86,13 @@ export default function UploadPage() {
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings to use this app.',
+          title: t.toast.cameraDenied,
+          description: t.toast.cameraError,
         });
       }
     };
     getCameraPermission();
-  }, [view, toast]);
+  }, [view, toast, t]);
 
   const analyzeTextContent = async (textContent: string, fileName: string) => {
     setDocument({ name: fileName, content: textContent });
@@ -115,7 +113,7 @@ export default function UploadPage() {
       setMessages([
         {
           role: 'assistant',
-          content: `I've analyzed your document, "${fileName}". You can see a summary and analysis under the "Analysis" tab. What would you like to know about it?`,
+          content: t.upload.analysisComplete(fileName),
         },
       ]);
     } else {
@@ -125,7 +123,7 @@ export default function UploadPage() {
 
   const handleFileLoad = async (file: File) => {
     setIsAnalyzing(true);
-    setDocument({ name: file.name, content: 'Processing...' });
+    setDocument({ name: file.name, content: t.upload.processing });
     setAnalysis(null);
     setMessages([]);
 
@@ -138,8 +136,8 @@ export default function UploadPage() {
       console.error(error);
       toast({
         variant: 'destructive',
-        title: 'Analysis Failed',
-        description: 'There was an error analyzing your document. Please try again.',
+        title: t.toast.analysisFailed,
+        description: t.toast.analysisError,
       });
       setDocument(null);
     } finally {
@@ -150,7 +148,8 @@ export default function UploadPage() {
   const handleCapture = async () => {
     if (!videoRef.current || !canvasRef.current) return;
     setIsAnalyzing(true);
-    setDocument({ name: 'camera_capture.png', content: 'Processing...' });
+    const fileName = 'camera_capture.png';
+    setDocument({ name: fileName, content: t.upload.processing });
     setAnalysis(null);
     setMessages([]);
 
@@ -164,13 +163,13 @@ export default function UploadPage() {
 
     try {
       const { text } = await extractDocumentText({ documentDataUri: dataUri });
-      await analyzeTextContent(text, 'camera_capture.png');
+      await analyzeTextContent(text, fileName);
     } catch (error) {
       console.error(error);
       toast({
         variant: 'destructive',
-        title: 'Analysis Failed',
-        description: 'There was an error analyzing the captured image. Please try again.',
+        title: t.toast.analysisFailed,
+        description: t.toast.cameraAnalysisError,
       });
       setDocument(null);
     } finally {
@@ -186,17 +185,18 @@ export default function UploadPage() {
     form.reset();
 
     try {
-      let guidanceInput = `The user's question is: "${userInput}"`;
+      let guidanceInputText = `The user's question is: "${userInput}"`;
       if (document?.content) {
-        guidanceInput = `The user has uploaded a document with the following content:\n\n---\n${document.content}\n---\n\n${guidanceInput}`;
+        guidanceInputText = `The user has uploaded a document with the following content:\n\n---\n${document.content}\n---\n\n${guidanceInputText}`;
       }
       
-      const response = await interactiveLegalGuidance({ message: guidanceInput, language });
+      const input: InteractiveLegalGuidanceInput = { message: guidanceInputText, language };
+      const response = await interactiveLegalGuidance(input);
       
       if (response) {
         setMessages([...newMessages, { role: 'assistant', content: response }]);
       } else {
-         setMessages([...newMessages, { role: 'assistant', content: "I'm sorry, I couldn't process that. Could you try rephrasing?" }]);
+         setMessages([...newMessages, { role: 'assistant', content: t.common.error }]);
       }
 
     } catch (error) {
@@ -205,7 +205,7 @@ export default function UploadPage() {
         ...newMessages,
         {
           role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again.',
+          content: t.common.error,
         },
       ]);
     } finally {
@@ -220,17 +220,17 @@ export default function UploadPage() {
           <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
             <BotMessageSquare className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="text-3xl">Upload & Scan</CardTitle>
-          <CardDescription>How would you like to provide your document?</CardDescription>
+          <CardTitle className="text-3xl">{t.upload.title}</CardTitle>
+          <CardDescription>{t.upload.description}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col sm:flex-row gap-4 justify-center p-6">
           <Button onClick={() => setView('camera')} size="lg" variant="outline">
             <Camera className="mr-2 h-5 w-5" />
-            Use Camera
+            {t.upload.useCamera}
           </Button>
           <Button onClick={() => setView('upload')} size="lg">
             <Upload className="mr-2 h-5 w-5" />
-            Upload File
+            {t.upload.uploadFile}
           </Button>
         </CardContent>
       </Card>
@@ -241,8 +241,8 @@ export default function UploadPage() {
      <div className="flex h-full items-center justify-center">
         <Card className="w-full max-w-2xl shadow-lg">
             <CardHeader>
-                <CardTitle>Camera Capture</CardTitle>
-                <CardDescription>Position your document in the frame and click capture.</CardDescription>
+                <CardTitle>{t.upload.cameraTitle}</CardTitle>
+                <CardDescription>{t.upload.cameraDescription}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="relative">
@@ -250,17 +250,15 @@ export default function UploadPage() {
                     <canvas ref={canvasRef} className="hidden" />
                     {hasCameraPermission === false && (
                          <Alert variant="destructive" className="mt-4">
-                            <AlertTitle>Camera Access Required</AlertTitle>
-                            <AlertDescription>
-                                Please allow camera access to use this feature. You may need to change permissions in your browser settings.
-                            </AlertDescription>
+                            <AlertTitle>{t.toast.cameraDenied}</AlertTitle>
+                            <AlertDescription>{t.toast.cameraError}</AlertDescription>
                         </Alert>
                     )}
                 </div>
                  <div className="mt-4 flex justify-between">
-                    <Button variant="outline" onClick={() => setView('options')}>Back</Button>
+                    <Button variant="outline" onClick={() => setView('options')}>{t.common.back}</Button>
                     <Button onClick={handleCapture} disabled={isAnalyzing || hasCameraPermission !== true}>
-                        {isAnalyzing ? "Analyzing..." : "Capture"}
+                        {isAnalyzing ? t.common.analyzing : t.upload.capture}
                     </Button>
                 </div>
             </CardContent>
@@ -272,13 +270,13 @@ export default function UploadPage() {
     <div className="flex h-full items-center justify-center">
         <Card className="w-full max-w-2xl shadow-lg">
             <CardHeader className="text-center">
-                <CardTitle className="text-3xl">Upload Document</CardTitle>
-                <CardDescription>Select a PDF or TXT file to analyze.</CardDescription>
+                <CardTitle className="text-3xl">{t.upload.uploadTitle}</CardTitle>
+                <CardDescription>{t.upload.uploadDescription}</CardDescription>
             </CardHeader>
             <CardContent>
                 <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
                  <div className="mt-4 flex justify-start">
-                    <Button variant="outline" onClick={() => setView('options')}>Back</Button>
+                    <Button variant="outline" onClick={() => setView('options')}>{t.common.back}</Button>
                 </div>
             </CardContent>
         </Card>
@@ -286,15 +284,15 @@ export default function UploadPage() {
   );
   
   const renderMainView = () => {
-    if (isAnalyzing && !document?.content.startsWith("Processing")) {
+    if (isAnalyzing && !document?.content.startsWith(t.upload.processing)) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Card className="w-full max-w-2xl shadow-lg text-center">
                     <CardHeader>
-                        <CardTitle>Analyzing Document</CardTitle>
+                        <CardTitle>{t.common.analyzingDocument}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p>Please wait while we analyze your document...</p>
+                        <p>{t.common.pleaseWait}</p>
                         <div className="mt-4 h-2 bg-primary/20 rounded-full overflow-hidden">
                             <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
                         </div>
@@ -318,16 +316,16 @@ export default function UploadPage() {
       <div className="grid h-full gap-6 md:grid-cols-2">
         <div className="flex flex-col gap-4 h-full min-h-[400px]">
           <div className='flex justify-between items-center'>
-            <h2 className="text-2xl font-semibold">Document Viewer</h2>
-            <Button variant="outline" onClick={() => setDocument(null)}>Upload New</Button>
+            <h2 className="text-2xl font-semibold">{t.common.documentViewer}</h2>
+            <Button variant="outline" onClick={() => setDocument(null)}>{t.upload.uploadNew}</Button>
           </div>
           <DocumentViewer content={document.content} />
         </div>
         <div className="flex flex-col gap-4 h-full min-h-[400px]">
           <Tabs defaultValue="analysis" className="flex flex-col h-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="analysis">Analysis</TabsTrigger>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
+              <TabsTrigger value="analysis">{t.common.analysis}</TabsTrigger>
+              <TabsTrigger value="chat">{t.common.chat}</TabsTrigger>
             </TabsList>
             <TabsContent value="analysis" className="flex-1 overflow-auto">
               <DocumentAnalysis analysis={analysis} isLoading={isAnalyzing} />
@@ -339,7 +337,7 @@ export default function UploadPage() {
                   isLoading={isChatting}
                   onSendMessage={handleSendMessage}
                   form={form}
-                  placeholder="Ask about your document..."
+                  placeholder={t.upload.chatPlaceholder}
                 />
               </div>
             </TabsContent>

@@ -3,38 +3,38 @@
 import Link from 'next/link';
 import { Bot, Search, Scale, ShieldCheck } from 'lucide-react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import React, { useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-
-const features = [
-  {
-    title: 'Upload and Scan',
-    description: 'Upload your legal documents for a comprehensive AI-powered analysis.',
-    href: '/upload',
-    icon: <Scale className="h-10 w-10" />,
-  },
-  {
-    title: 'Mini Lawyer Support',
-    description: 'Get instant answers to your legal questions from our AI assistant.',
-    href: '/lawyer',
-    icon: <Bot className="h-10 w-10" />,
-  },
-  {
-    title: 'See Future',
-    description: 'Understand the potential pros, cons, and consequences of your legal actions.',
-    href: '/future',
-    icon: <Search className="h-10 w-10" />,
-  },
-  {
-    title: 'Spot Trap',
-    description: 'Identify risky clauses and unfair terms in your documents.',
-    href: '/spot-trap',
-    icon: <ShieldCheck className="h-10 w-10" />,
-  },
-];
+import { useTranslations } from '@/hooks/use-translations';
 
 export default function Home() {
+  const t = useTranslations();
+
+  const features = [
+    {
+      title: t.home.features.upload.title,
+      description: t.home.features.upload.description,
+      href: '/upload',
+      icon: <Scale className="h-10 w-10" />,
+    },
+    {
+      title: t.home.features.lawyer.title,
+      description: t.home.features.lawyer.description,
+      href: '/lawyer',
+      icon: <Bot className="h-10 w-10" />,
+    },
+    {
+      title: t.home.features.future.title,
+      description: t.home.features.future.description,
+      href: '/future',
+      icon: <Search className="h-10 w-10" />,
+    },
+    {
+      title: t.home.features.trap.title,
+      description: t.home.features.trap.description,
+      href: '/spot-trap',
+      icon: <ShieldCheck className="h-10 w-10" />,
+    },
+  ];
+
   return (
     <main className="flex-1">
       <section className="relative w-full py-20 md:py-32 lg:py-40 overflow-hidden">
@@ -45,7 +45,7 @@ export default function Home() {
                     DharmaJyoti
                 </h1>
                 <p className="mt-4 text-lg text-foreground/80 md:text-xl">
-                    Decoding Hidden Agreements & Rewriting with Multilingual Accuracy for Justice, Your Own Trustworthy Insight
+                    {t.home.tagline}
                 </p>
             </div>
         </div>
@@ -62,7 +62,7 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ title, description, href, icon }: (typeof features)[0]) {
+function FeatureCard({ title, description, href, icon }: {title: string, description: string, href: string, icon: React.ReactNode}) {
   return (
     <Link href={href} className="group">
       <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg transition-transform duration-300 group-hover:scale-105 neon-glow">

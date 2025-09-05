@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Languages } from 'lucide-react';
+import { useTranslations } from '@/hooks/use-translations';
 
 const languages = [
   { value: 'English', label: 'English' },
@@ -21,13 +22,14 @@ const languages = [
 
 export function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage();
+  const t = useTranslations();
 
   return (
     <div className="flex items-center gap-2">
       <Languages className="h-5 w-5 text-muted-foreground" />
       <Select value={language} onValueChange={setLanguage}>
         <SelectTrigger className="w-[120px]">
-          <SelectValue placeholder="Language" />
+          <SelectValue placeholder={t.languageSwitcher.placeholder} />
         </SelectTrigger>
         <SelectContent>
           {languages.map((lang) => (

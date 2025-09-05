@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Volume2, Loader } from 'lucide-react';
 import type { Analysis } from '@/app/upload/page';
+import { useTranslations } from '@/hooks/use-translations';
 
 interface DocumentAnalysisProps {
   analysis: Analysis | null;
@@ -15,6 +16,7 @@ interface DocumentAnalysisProps {
 
 export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps) {
   const { toast } = useToast();
+  const t = useTranslations();
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [audioData, setAudioData] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -49,7 +51,7 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
     return (
       <Card className="shadow-lg flex items-center justify-center h-full">
         <CardContent className="text-center p-6">
-          <p className="text-muted-foreground">No analysis available. Upload a document to get started.</p>
+          <p className="text-muted-foreground">{t.analysis.noAnalysis}</p>
         </CardContent>
       </Card>
     );
@@ -77,8 +79,8 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
       console.error('Error generating audio:', error);
       toast({
         variant: 'destructive',
-        title: 'Audio Generation Failed',
-        description: 'Could not generate audio for the analysis.',
+        title: t.toast.audioFailed,
+        description: t.toast.audioError,
       });
     } finally {
       setIsGeneratingAudio(false);
@@ -86,10 +88,10 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
   };
 
   const textToRead = `
-    Document Type: ${analysis.documentType}.
-    Purpose: ${analysis.purpose}.
-    Summary: ${analysis.summary}.
-    Keywords: ${analysis.keywords.join(', ')}.
+    ${t.analysis.docType}: ${analysis.documentType}.
+    ${t.analysis.purpose}: ${analysis.purpose}.
+    ${t.analysis.summary}: ${analysis.summary}.
+    ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
   `;
 
   return (
@@ -105,7 +107,7 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
             size="icon"
             onClick={() => handlePlayAudio(textToRead)}
             disabled={isGeneratingAudio}
-            aria-label="Listen to analysis"
+            aria-label={t.common.listen}
           >
             {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
           </Button>
@@ -114,13 +116,13 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
       <CardContent>
         <div className="space-y-6">
           <div>
-            <h3 className="font-semibold text-lg mb-2">Summary</h3>
+            <h3 className="font-semibold text-lg mb-2">{t.analysis.summary}</h3>
             <p className="whitespace-pre-wrap text-sm text-muted-foreground leading-relaxed">
               {analysis.summary}
             </p>
           </div>
           <div>
-            <h3 className="font-semibold text-lg mb-2">Keywords</h3>
+            <h3 className="font-semibold text-lg mb-2">{t.analysis.keywords}</h3>
             <div className="flex flex-wrap gap-2">
               {analysis.keywords.map((keyword, index) => (
                 <Badge key={index} variant="secondary" className="text-sm">
