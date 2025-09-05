@@ -1,133 +1,149 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { ArrowRight, CheckCircle, ThumbsDown, ThumbsUp, Volume2, Loader } from 'lucide-react';
-import { listProsConsConsequencesOfAction, ListProsConsConsequencesOfActionOutput } from '@/ai/flows/list-pros-cons-consequences-of-action';
+import { Button } from '@/components/ui/button';
+import { FileUploader } from '@/components/file-uploader';
+import { extractDocumentText } from '@/ai/flows/extract-document-text';
+import { generateFutureScenarios, GenerateFutureScenariosOutput } from '@/ai/flows/generate-future-scenarios';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useToast } from '@/hooks/use-toast';
-
-const formSchema = z.object({
-  action: z.string().min(10, {
-    message: "Please describe the action in at least 10 characters.",
-  }),
-  context: z.string().optional(),
-});
-
-type FutureForm = z.infer<typeof formSchema>;
+import { ThumbsUp, ThumbsDown, Lightbulb, Search, FileText, Volume2, Loader } from 'lucide-react';
 
 export default function FuturePage() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [result, setResult] = useState<ListProsConsConsequencesOfActionOutput | null>(null);
+    const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
+    const [analysis, setAnalysis] = useState<GenerateFutureScenariosOutput | null>(null);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const { toast } = useToast();
 
-    const form = useForm<FutureForm>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            action: "",
-            context: "",
-        },
-    });
+    const handleFileLoad = async (file: File) => {
+        setIsAnalyzing(true);
+        setDocument({ name: file.name, content: 'Processing...' });
+        setAnalysis(null);
 
-    async function onSubmit(values: FutureForm) {
-        setIsLoading(true);
-        setResult(null);
         try {
-            const res = await listProsConsConsequencesOfAction(values);
-            setResult(res);
+            const arrayBuffer = await file.arrayBuffer();
+            const dataUri = `data:${file.type};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+
+            setDocument({ name: file.name, content: 'Extracting text...' });
+            const { text } = await extractDocumentText({ documentDataUri: dataUri });
+            setDocument({ name: file.name, content: text });
+            
+            setDocument(prev => ({ ...prev, name: prev.name, content: 'Generating scenarios...' }));
+            const scenarios = await generateFutureScenarios({ documentText: text });
+            setAnalysis(scenarios);
+
         } catch (error) {
-            console.error("Error analyzing action:", error);
-            // You can add a toast notification here to inform the user
+            console.error(error);
+            toast({
+                variant: 'destructive',
+                title: 'Analysis Failed',
+                description: 'There was an error analyzing your document. Please try again.',
+            });
+            setDocument(null);
+        } finally {
+            setIsAnalyzing(false);
         }
-        setIsLoading(false);
+    };
+
+    const renderInitialView = () => (
+        <div className="w-full max-w-2xl">
+            <Card className="shadow-xl">
+                <CardHeader className="text-center">
+                    <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
+                        <Search className="h-8 w-8 text-primary" />
+                    </div>
+                    <CardTitle className="text-3xl">See the Future</CardTitle>
+                    <CardDescription>Upload a document to see potential best-case and worst-case scenarios.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
+                </CardContent>
+            </Card>
+        </div>
+    );
+    
+    const renderLoadingView = () => (
+        <div className="w-full max-w-2xl">
+            <Card className="shadow-xl text-center">
+                <CardHeader>
+                    <CardTitle className="text-2xl">Peering into the Future...</CardTitle>
+                    <CardDescription>Please wait while our AI analyzes potential outcomes based on your document.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
+                        <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
+                    </div>
+                    <p className="mt-4 text-sm text-muted-foreground">{document?.content}</p>
+                </CardContent>
+            </Card>
+        </div>
+    );
+
+    const renderAnalysisView = () => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl">
+            <div className="md:col-span-1">
+                <Card className="shadow-lg sticky top-8">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-3"><FileText /> Document</CardTitle>
+                        <CardDescription>{document?.name}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="max-h-[60vh] overflow-y-auto">
+                        <p className="whitespace-pre-wrap text-sm text-foreground/80">{document?.content.startsWith("Generating scenarios") ? "Analysis in progress..." : document?.content}</p>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="md:col-span-1 space-y-8">
+                {isAnalyzing && !analysis ? (
+                    <AnalysisSkeleton />
+                ) : analysis ? (
+                    <>
+                        <ScenarioCard
+                            title="Best Case Scenario"
+                            content={analysis.bestCase}
+                            icon={<ThumbsUp className="text-green-500" />}
+                        />
+                        <ScenarioCard
+                            title="Worst Case Scenario"
+                            content={analysis.worstCase}
+                            icon={<ThumbsDown className="text-red-500" />}
+                        />
+                         <ScenarioCard
+                            title="Advice"
+                            content={analysis.advice}
+                            icon={<Lightbulb className="text-yellow-500" />}
+                        />
+                    </>
+                ) : null}
+            </div>
+        </div>
+    );
+
+    const renderContent = () => {
+        if (isAnalyzing) {
+          return renderLoadingView();
+        }
+        if (!document) {
+          return renderInitialView();
+        }
+        return renderAnalysisView();
     }
 
     return (
-        <main className="container mx-auto px-4 py-12 md:py-20">
-            <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary mb-4">See the Future</h1>
-                    <p className="text-lg md:text-xl text-foreground/80">
-                        Analyze the potential outcomes of your legal actions.
-                    </p>
-                </div>
-
-                <Card className="shadow-xl">
-                    <CardHeader>
-                        <CardTitle>Describe the Action</CardTitle>
-                        <CardDescription>
-                            Explain the action you're considering, like "signing a new lease agreement" or "starting a new business partnership". Provide any extra context for a better analysis.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                                <FormField
-                                    control={form.control}
-                                    name="action"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Action</FormLabel>
-                                            <FormControl>
-                                                <Textarea placeholder="e.g., Signing a 12-month commercial lease for an office space..." {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="context"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Additional Context (Optional)</FormLabel>
-                                            <FormControl>
-                                                <Textarea placeholder="e.g., The lease is for a small retail business. I have concerns about the break clause." {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <Button type="submit" disabled={isLoading}>
-                                    {isLoading ? "Analyzing..." : "See Future"}
-                                    <ArrowRight className="ml-2 h-4 w-4" />
-                                </Button>
-                            </form>
-                        </Form>
-                    </CardContent>
-                </Card>
-
-                {isLoading && <ResultSkeleton />}
-                {result && <AnalysisResult result={result} />}
-
-            </div>
+        <main className="container mx-auto px-4 py-12 md:py-20 flex justify-center">
+            {renderContent()}
         </main>
     );
 }
 
-function AnalysisResult({ result }: { result: ListProsConsConsequencesOfActionOutput }) {
-    return (
-        <div className="mt-12 space-y-8">
-            <ResultSection title="Pros" items={result.pros} icon={<ThumbsUp className="text-green-500"/>} color="green" />
-            <ResultSection title="Cons" items={result.cons} icon={<ThumbsDown className="text-red-500"/>} color="red" />
-            <ResultSection title="Potential Consequences" items={result.consequences} icon={<CheckCircle className="text-blue-500"/>} color="blue" />
-        </div>
-    );
-}
-
-function ResultSection({ title, items, icon, color }: { title: string; items: string[]; icon: React.ReactNode, color: string }) {
+function ScenarioCard({ title, content, icon }: { title: string, content: string, icon: React.ReactNode }) {
     const { toast } = useToast();
     const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
     const [audioData, setAudioData] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    const handlePlayAudio = async (text: string) => {
+    const handlePlayAudio = async (textToRead: string) => {
         if (audioData) {
             if (audioRef.current) {
                 audioRef.current.play();
@@ -137,7 +153,7 @@ function ResultSection({ title, items, icon, color }: { title: string; items: st
 
         setIsGeneratingAudio(true);
         try {
-            const response = await textToSpeech(text);
+            const response = await textToSpeech(textToRead);
             const newAudioData = response.media;
             setAudioData(newAudioData);
 
@@ -157,7 +173,7 @@ function ResultSection({ title, items, icon, color }: { title: string; items: st
         }
     };
 
-    const textToRead = `${title}. ${items.join('. ')}`;
+    const textToRead = `${title}. ${content}`;
 
     return (
         <Card className="shadow-lg">
@@ -179,23 +195,16 @@ function ResultSection({ title, items, icon, color }: { title: string; items: st
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <ul className="space-y-3">
-                    {items.map((item, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                            <div className="mt-1">{icon}</div>
-                            <span className="text-foreground/90">{item}</span>
-                        </li>
-                    ))}
-                </ul>
+                <p className="text-foreground/90 leading-relaxed">{content}</p>
             </CardContent>
         </Card>
-    )
+    );
 }
 
-function ResultSkeleton() {
+function AnalysisSkeleton() {
     return (
-        <div className="mt-12 space-y-8">
-            {[1,2,3].map(i => (
+        <div className="space-y-8">
+            {[1, 2, 3].map(i => (
                 <Card key={i} className="shadow-lg">
                     <CardHeader>
                         <Skeleton className="h-8 w-1/3" />
@@ -203,10 +212,9 @@ function ResultSkeleton() {
                     <CardContent className="space-y-4">
                         <Skeleton className="h-6 w-full" />
                         <Skeleton className="h-6 w-5/6" />
-                        <Skeleton className="h-6 w-3/4" />
                     </CardContent>
                 </Card>
             ))}
         </div>
-    )
+    );
 }
