@@ -18,6 +18,15 @@ const languages = [
   { value: 'German', label: 'Deutsch' },
   { value: 'Hindi', label: 'हिन्दी' },
   { value: 'Mandarin', label: '中文' },
+  { value: 'Bengali', label: 'বাংলা' },
+  { value: 'Gujarati', label: 'ગુજરાતી' },
+  { value: 'Kannada', label: 'ಕನ್ನಡ' },
+  { value: 'Malayalam', label: 'മലയാളം' },
+  { value: 'Marathi', label: 'मराठी' },
+  { value: 'Punjabi', label: 'ਪੰਜਾਬੀ' },
+  { value: 'Tamil', label: 'தமிழ்' },
+  { value: 'Telugu', label: 'తెలుగు' },
+  { value: 'Urdu', label: 'اردو' },
 ];
 
 export function LanguageSwitcher() {

@@ -13,6 +13,15 @@ export function useTranslations() {
         case 'German': return 'de';
         case 'Hindi': return 'hi';
         case 'Mandarin': return 'zh';
+        case 'Bengali': return 'bn';
+        case 'Gujarati': return 'gu';
+        case 'Kannada': return 'kn';
+        case 'Malayalam': return 'ml';
+        case 'Marathi': return 'mr';
+        case 'Punjabi': return 'pa';
+        case 'Tamil': return 'ta';
+        case 'Telugu': return 'te';
+        case 'Urdu': return 'ur';
         case 'English':
         default:
             return 'en';
