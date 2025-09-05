@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 39 77% 95%;
+    --background: 40 80% 96%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -76,5 +76,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
   }
 }

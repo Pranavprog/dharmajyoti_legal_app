@@ -1,7 +1,7 @@
 'use client';
 
 import type { UseFormReturn } from 'react-hook-form';
-import { Paperclip, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -58,8 +58,7 @@ export function ChatPanel({
                   <FormControl>
                     <Textarea
                       placeholder={placeholder}
-                      className="resize-none pr-20"
-                      rows={1}
+                      className="resize-none pr-14 min-h-[48px] rounded-full"
                       onKeyDown={handleKeyDown}
                       {...field}
                       disabled={isLoading}
@@ -71,7 +70,7 @@ export function ChatPanel({
             <Button
               type="submit"
               size="icon"
-              className="absolute top-1/2 right-3 -translate-y-1/2"
+              className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full h-9 w-9"
               disabled={isLoading || !form.formState.isValid}
             >
               <Send className="h-4 w-4" />

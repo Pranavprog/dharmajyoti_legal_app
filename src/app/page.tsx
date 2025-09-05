@@ -22,8 +22,7 @@ import { summarizeUploadedDocument } from '@/ai/flows/summarize-uploaded-documen
 import { identifyDocumentTypeAndPurpose } from '@/ai/flows/identify-document-type-and-purpose';
 import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
 import { useToast } from '@/hooks/use-toast';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BotMessageSquare } from 'lucide-react';
 import { processPdf } from '@/services/pdf-service';
 
@@ -159,7 +158,7 @@ User's question: "${userInput}"
   return (
     <SidebarProvider>
       <div className="grid h-screen w-full lg:grid-cols-[300px_1fr]">
-        <Sidebar className="hidden lg:flex lg:flex-col">
+        <Sidebar className="hidden lg:flex lg:flex-col bg-card border-r">
           <SidebarHeader className="border-b">
             <Logo />
           </SidebarHeader>
@@ -172,19 +171,20 @@ User's question: "${userInput}"
         <div className="flex flex-col">
           <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-card px-4 sm:h-[60px] sm:px-6">
             <SidebarTrigger className="lg:hidden" />
-            <h1 className="flex-1 text-lg font-semibold md:text-xl truncate">
-              {document ? document.name : 'Interactive Chat'}
+            <h1 className="flex-1 text-xl font-semibold truncate">
+              {document ? document.name : 'DharmaJyoti'}
             </h1>
           </header>
           <main className="flex flex-1 flex-col gap-4 overflow-auto bg-background p-4 sm:p-6">
             {!document ? (
               <div className="flex h-full items-center justify-center">
-                <Card className="w-full max-w-2xl">
+                <Card className="w-full max-w-2xl shadow-lg">
                     <CardHeader className="text-center">
-                        <div className="mx-auto mb-4 bg-primary/10 p-3 rounded-full w-fit">
+                        <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
                             <BotMessageSquare className="h-8 w-8 text-primary" />
                         </div>
-                        <CardTitle>Welcome to DharmaJyoti</CardTitle>
+                        <CardTitle className="text-3xl">Welcome to DharmaJyoti</CardTitle>
+                        <CardDescription>Your AI-powered legal assistant. Upload a document or ask a question to get started.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <ChatPanel
@@ -192,7 +192,7 @@ User's question: "${userInput}"
                             isLoading={isChatting}
                             onSendMessage={handleSendMessage}
                             form={form}
-                            placeholder="Ask a legal question to get started..."
+                            placeholder="Ask a legal question..."
                         />
                          <div className="lg:hidden mt-6">
                             <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
@@ -203,7 +203,7 @@ User's question: "${userInput}"
             ) : (
               <div className="grid h-full gap-6 md:grid-cols-2">
                 <div className="flex flex-col gap-4 h-full min-h-[400px]">
-                    <h2 className="text-lg font-semibold">Document</h2>
+                    <h2 className="text-2xl font-semibold">Document Viewer</h2>
                     <DocumentViewer content={document.content} />
                 </div>
                 <div className="flex flex-col gap-4 h-full min-h-[400px]">
