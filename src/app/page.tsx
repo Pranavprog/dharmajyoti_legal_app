@@ -103,7 +103,7 @@ function FeatureCard({ title, description, href, icon }: (typeof features)[0]) {
             onBlur={handleBlur}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="relative h-full w-full overflow-hidden rounded-xl border border-border bg-gradient-to-r from-card to-secondary p-px shadow-lg transition-all duration-300 hover:border-primary/50"
+            className="relative h-full w-full overflow-hidden rounded-xl border border-border bg-gradient-to-r from-card to-secondary p-px shadow-lg transition-all duration-300 hover:border-primary/50 hover:scale-105"
         >
             <div
                 className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300"
