@@ -11,14 +11,14 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const InteractiveLegalGuidanceInputSchema = z.object({
+const InteractiveLegalGuidanceInputSchema = z.object({
   message: z.string().describe('The user\'s message or question.'),
   language: z.string().optional().describe('The language for the AI to respond in.'),
 });
-export type InteractiveLegalGuidanceInput = z.infer<typeof InteractiveLegalGuidanceInputSchema>;
+type InteractiveLegalGuidanceInput = z.infer<typeof InteractiveLegalGuidanceInputSchema>;
 
-export const InteractiveLegalGuidanceOutputSchema = z.string().describe("The AI's response.");
-export type InteractiveLegalGuidanceOutput = z.infer<typeof InteractiveLegalGuidanceOutputSchema>;
+const InteractiveLegalGuidanceOutputSchema = z.string().describe("The AI's response.");
+type InteractiveLegalGuidanceOutput = z.infer<typeof InteractiveLegalGuidanceOutputSchema>;
 
 export async function interactiveLegalGuidance(
   input: InteractiveLegalGuidanceInput
