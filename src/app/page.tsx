@@ -64,29 +64,14 @@ export default function Home() {
 
 function FeatureCard({ title, description, href, icon }: (typeof features)[0]) {
   return (
-    <Link href={href} className="group perspective">
-      <div className="relative h-full w-full preserve-3d group-hover:rotate-y-180 transition-transform duration-500 rounded-xl">
-        {/* Front of the card */}
-        <div className="absolute w-full h-full backface-hidden border border-border bg-gradient-to-r from-card to-secondary p-px shadow-lg rounded-xl">
-          <Card className="h-full w-full flex flex-col items-center justify-center text-center p-6 bg-card/80 backdrop-blur-sm">
-            <div className="mb-4 text-primary">{icon}</div>
-            <CardTitle className="text-xl font-bold">{title}</CardTitle>
-            <CardContent className="p-0 mt-2 text-sm text-foreground/70">
-              <p>Hover to see more</p>
-            </CardContent>
-          </Card>
-        </div>
-        {/* Back of the card */}
-        <div className="absolute w-full h-full backface-hidden rotate-y-180 border border-border bg-gradient-to-r from-secondary to-card p-px shadow-lg rounded-xl">
-           <Card className="h-full w-full flex flex-col items-center justify-center text-center p-6 bg-card/80 backdrop-blur-sm">
-              <CardTitle className="text-xl font-bold">{title}</CardTitle>
-              <CardContent className="p-0 mt-2 text-sm text-foreground/70">
-                <p className="mb-4">{description}</p>
-                <Button variant="outline" size="sm">Learn More</Button>
-              </CardContent>
-            </Card>
-        </div>
-      </div>
+    <Link href={href} className="group">
+      <Card className="h-full flex flex-col items-center justify-center text-center p-6 bg-card/80 backdrop-blur-sm shadow-lg transition-transform duration-300 group-hover:scale-105">
+        <div className="mb-4 text-primary">{icon}</div>
+        <CardTitle className="text-xl font-bold">{title}</CardTitle>
+        <CardContent className="p-0 mt-2 text-sm text-foreground/70">
+          <p>{description}</p>
+        </CardContent>
+      </Card>
     </Link>
   );
 }
