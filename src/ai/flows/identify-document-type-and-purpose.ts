@@ -14,6 +14,7 @@ const IdentifyDocumentTypeAndPurposeInputSchema = z.object({
   documentText: z
     .string()
     .describe('The text content of the legal document.'),
+  language: z.string().optional().describe('The language for the AI to respond in.'),
 });
 export type IdentifyDocumentTypeAndPurposeInput = z.infer<typeof IdentifyDocumentTypeAndPurposeInputSchema>;
 
@@ -34,6 +35,8 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI legal assistant tasked with analyzing legal documents.
 
   Your goal is to identify the type of document and summarize its purpose in a single, clear sentence.
+
+  Please provide the response in the following language: {{language}}.
 
   Analyze the following document text:
   {{documentText}}

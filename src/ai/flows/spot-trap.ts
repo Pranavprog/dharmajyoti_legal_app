@@ -14,6 +14,7 @@ const SpotTrapsInputSchema = z.object({
   documentText: z
     .string()
     .describe('The text content of the legal document.'),
+  language: z.string().optional().describe('The language for the AI to respond in.'),
 });
 export type SpotTrapsInput = z.infer<typeof SpotTrapsInputSchema>;
 
@@ -33,6 +34,8 @@ const prompt = ai.definePrompt({
   input: {schema: SpotTrapsInputSchema},
   output: {schema: SpotTrapsOutputSchema},
   prompt: `You are an AI legal expert with a talent for identifying risks in legal documents. Your task is to analyze the provided document and identify potential "traps" for the user.
+
+  Please provide the response in the following language: {{language}}.
 
   Analyze the following document text:
   {{documentText}}

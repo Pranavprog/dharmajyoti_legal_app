@@ -8,6 +8,7 @@ import { ChatPanel } from '@/components/chat/chat-panel';
 import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BotMessageSquare } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
 
 export interface Message {
   role: 'user' | 'assistant';
@@ -21,6 +22,7 @@ const chatSchema = z.object({
 type ChatForm = z.infer<typeof chatSchema>;
 
 export default function LawyerPage() {
+  const { language } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -45,7 +47,7 @@ export default function LawyerPage() {
     form.reset();
 
     try {
-      const response = await interactiveLegalGuidance(userInput);
+      const response = await interactiveLegalGuidance({ message: userInput, language });
       setMessages([...newMessages, { role: 'assistant', content: response ?? "I'm sorry, I couldn't process that. Could you try rephrasing?" }]);
     } catch (error) {
       console.error(error);

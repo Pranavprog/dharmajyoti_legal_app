@@ -18,6 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { BotMessageSquare, Camera, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
+import { useLanguage } from '@/context/language-context';
 
 export interface Message {
   role: 'user' | 'assistant';
@@ -56,6 +57,7 @@ export default function UploadPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { toast } = useToast();
+  const { language } = useLanguage();
 
   const form = useForm<ChatForm>({
     resolver: zodResolver(chatSchema),
@@ -99,8 +101,8 @@ export default function UploadPage() {
     setView('upload');
 
     const [summaryRes, typeRes] = await Promise.all([
-      summarizeUploadedDocument({ documentText: textContent }),
-      identifyDocumentTypeAndPurpose({ documentText: textContent }),
+      summarizeUploadedDocument({ documentText: textContent, language }),
+      identifyDocumentTypeAndPurpose({ documentText: textContent, language }),
     ]);
 
     if (summaryRes && typeRes) {
@@ -184,12 +186,12 @@ export default function UploadPage() {
     form.reset();
 
     try {
-      let guidanceInput = userInput;
+      let guidanceInput = `The user's question is: "${userInput}"`;
       if (document?.content) {
-        guidanceInput = `The user has uploaded a document with the following content:\n\n---\n${document.content}\n---\n\nThe user's question is: "${userInput}"`;
+        guidanceInput = `The user has uploaded a document with the following content:\n\n---\n${document.content}\n---\n\n${guidanceInput}`;
       }
       
-      const response = await interactiveLegalGuidance(guidanceInput);
+      const response = await interactiveLegalGuidance({ message: guidanceInput, language });
       
       if (response) {
         setMessages([...newMessages, { role: 'assistant', content: response }]);

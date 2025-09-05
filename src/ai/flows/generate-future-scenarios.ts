@@ -15,6 +15,7 @@ const GenerateFutureScenariosInputSchema = z.object({
   documentText: z
     .string()
     .describe('The text content of the legal document.'),
+  language: z.string().optional().describe('The language for the AI to respond in.'),
 });
 export type GenerateFutureScenariosInput = z.infer<
   typeof GenerateFutureScenariosInputSchema
@@ -52,6 +53,8 @@ const prompt = ai.definePrompt({
   input: {schema: GenerateFutureScenariosInputSchema},
   output: {schema: GenerateFutureScenariosOutputSchema},
   prompt: `You are an AI legal analyst and storyteller. Your task is to analyze a legal document and create two brief, narrative future scenarios for the user.
+
+  Please provide the response in the following language: {{language}}.
 
   Document Text:
   {{{documentText}}}

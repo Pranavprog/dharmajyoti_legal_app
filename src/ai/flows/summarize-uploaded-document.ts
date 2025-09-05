@@ -16,6 +16,7 @@ const SummarizeUploadedDocumentInputSchema = z.object({
   documentText: z
     .string()
     .describe('The text content of the legal document to summarize.'),
+  language: z.string().optional().describe('The language for the AI to respond in.'),
 });
 export type SummarizeUploadedDocumentInput = z.infer<typeof SummarizeUploadedDocumentInputSchema>;
 
@@ -43,6 +44,8 @@ const summarizeUploadedDocumentPrompt = ai.definePrompt({
 
   1.  Provide a very small and crisp summary (2-3 sentences maximum) in clear, plain language.
   2.  Extract a list of the most important keywords or terms.
+
+  Please provide the response in the following language: {{language}}.
 
   Document:
   {{{documentText}}}`,

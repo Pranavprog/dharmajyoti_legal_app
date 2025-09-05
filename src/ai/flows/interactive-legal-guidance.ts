@@ -11,15 +11,14 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const InteractiveLegalGuidanceInputSchema = z.string();
-export type InteractiveLegalGuidanceInput = z.infer<
-  typeof InteractiveLegalGuidanceInputSchema
->;
+export const InteractiveLegalGuidanceInputSchema = z.object({
+  message: z.string().describe('The user\'s message or question.'),
+  language: z.string().optional().describe('The language for the AI to respond in.'),
+});
+export type InteractiveLegalGuidanceInput = z.infer<typeof InteractiveLegalGuidanceInputSchema>;
 
-const InteractiveLegalGuidanceOutputSchema = z.string();
-export type InteractiveLegalGuidanceOutput = z.infer<
-  typeof InteractiveLegalGuidanceOutputSchema
->;
+export const InteractiveLegalGuidanceOutputSchema = z.string().describe("The AI's response.");
+export type InteractiveLegalGuidanceOutput = z.infer<typeof InteractiveLegalGuidanceOutputSchema>;
 
 export async function interactiveLegalGuidance(
   input: InteractiveLegalGuidanceInput
@@ -29,9 +28,10 @@ export async function interactiveLegalGuidance(
 
 const interactiveLegalGuidancePrompt = ai.definePrompt({
   name: 'interactiveLegalGuidancePrompt',
-  input: {schema: z.string()},
-  output: {schema: z.string().nullable()},
+  input: {schema: InteractiveLegalGuidanceInputSchema},
+  output: {schema: InteractiveLegalGuidanceOutputSchema.nullable()},
   prompt: `You are MiniLawyer, an AI assistant that provides short, clear, everyday-language answers about legal texts or problems.
+Respond in the following language: {{language}}.
 
 Your Core Task:
 
@@ -53,7 +53,7 @@ Your Core Task:
 *   NO legal jargon. Be empathetic and neutral.
 
 **User's Request:**
-{{input}}
+{{message}}
 `,
 });
 

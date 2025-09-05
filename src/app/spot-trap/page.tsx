@@ -10,12 +10,14 @@ import { spotTraps, SpotTrapsOutput } from '@/ai/flows/spot-trap';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/context/language-context';
 
 export default function SpotTrapPage() {
   const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
   const [analysis, setAnalysis] = useState<SpotTrapsOutput | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const { toast } = useToast();
+  const { language } = useLanguage();
 
   const handleFileLoad = async (file: File) => {
     setIsAnalyzing(true);
@@ -31,7 +33,7 @@ export default function SpotTrapPage() {
       
       setDocument({ name: file.name, content: text });
 
-      const trapResult = await spotTraps({ documentText: text });
+      const trapResult = await spotTraps({ documentText: text, language });
       setAnalysis(trapResult);
 
     } catch (error) {

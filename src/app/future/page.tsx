@@ -10,12 +10,14 @@ import { generateFutureScenarios, GenerateFutureScenariosOutput } from '@/ai/flo
 import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ThumbsUp, ThumbsDown, Lightbulb, Search, FileText, Volume2, Loader } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
 
 export default function FuturePage() {
     const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
     const [analysis, setAnalysis] = useState<GenerateFutureScenariosOutput | null>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const { toast } = useToast();
+    const { language } = useLanguage();
 
     const handleFileLoad = async (file: File) => {
         setIsAnalyzing(true);
@@ -31,7 +33,7 @@ export default function FuturePage() {
             setDocument({ name: file.name, content: text });
             
             setDocument(prev => ({ ...prev, name: prev.name, content: 'Generating scenarios...' }));
-            const scenarios = await generateFutureScenarios({ documentText: text });
+            const scenarios = await generateFutureScenarios({ documentText: text, language });
             setAnalysis(scenarios);
 
         } catch (error) {
