@@ -4,16 +4,8 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUploader } from '@/components/file-uploader';
-import { Logo } from '@/components/logo';
 import { ChatPanel } from '@/components/chat/chat-panel';
 import { DocumentViewer } from '@/components/document/document-viewer';
 import { DocumentAnalysis } from '@/components/document/document-analysis';
@@ -157,10 +149,6 @@ User's question: "${userInput}"
 
   return (
       <div className="flex h-[calc(100vh-4rem)] w-full">
-        <div className="hidden lg:flex lg:flex-col bg-card border-r w-[300px] p-4">
-            <h2 className="text-xl font-semibold mb-4">Upload Document</h2>
-            <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
-        </div>
         <div className="flex flex-col flex-1">
           <main className="flex flex-1 flex-col gap-4 overflow-auto bg-background p-4 sm:p-6">
             {!document ? (
@@ -170,11 +158,11 @@ User's question: "${userInput}"
                         <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
                             <BotMessageSquare className="h-8 w-8 text-primary" />
                         </div>
-                        <CardTitle className="text-3xl">Upload & Scan</CardTitle>
+                        <CardTitle className="text-3xl">Upload &amp; Scan</CardTitle>
                         <CardDescription>Upload a document to get started.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                         <div className="lg:hidden mt-6">
+                         <div className="mt-6">
                             <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
                         </div>
                     </CardContent>
