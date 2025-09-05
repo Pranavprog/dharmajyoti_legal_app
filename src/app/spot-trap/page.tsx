@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { FileUploader } from '@/components/file-uploader';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, FileText, Lightbulb, ShieldCheck, Siren } from 'lucide-react';
+import { AlertTriangle, FileText, Lightbulb, ShieldCheck, Siren, Volume2, Loader } from 'lucide-react';
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
 import { spotTraps, SpotTrapsOutput } from '@/ai/flows/spot-trap';
+import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 
 export default function SpotTrapPage() {
   const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
@@ -24,6 +25,8 @@ export default function SpotTrapPage() {
     try {
       const arrayBuffer = await file.arrayBuffer();
       const dataUri = `data:${file.type};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+      
+      setDocument({ name: file.name, content: 'Extracting text from document...' });
       const { text } = await extractDocumentText({ documentDataUri: dataUri });
       
       setDocument({ name: file.name, content: text });
@@ -72,6 +75,7 @@ export default function SpotTrapPage() {
             <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
                 <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
             </div>
+            <p className="mt-4 text-sm text-muted-foreground">{document?.content}</p>
         </CardContent>
       </Card>
     </div>
@@ -126,13 +130,61 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
     if (!items || items.length === 0) {
         return null;
     }
+    
+    const { toast } = useToast();
+    const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+    const [audioData, setAudioData] = useState<string | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    const handlePlayAudio = async (text: string) => {
+        if (audioData) {
+            if (audioRef.current) {
+                audioRef.current.play();
+            }
+            return;
+        }
+
+        setIsGeneratingAudio(true);
+        try {
+            const response = await textToSpeech(text);
+            const newAudioData = response.media;
+            setAudioData(newAudioData);
+
+            const audio = new Audio(newAudioData);
+            audioRef.current = audio;
+            audio.play();
+
+        } catch (error) {
+            console.error('Error generating audio:', error);
+            toast({
+                variant: 'destructive',
+                title: 'Audio Generation Failed',
+                description: 'Could not generate audio for this section.',
+            });
+        } finally {
+            setIsGeneratingAudio(false);
+        }
+    };
+
+    const textToRead = `${title}. ${items.join('. ')}`;
 
     return (
         <Card className="shadow-lg">
             <CardHeader>
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                    {icon}
-                    <span>{title}</span>
+                <CardTitle className="flex items-center justify-between gap-3 text-2xl">
+                     <div className="flex items-center gap-3">
+                        {icon}
+                        <span>{title}</span>
+                    </div>
+                     <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handlePlayAudio(textToRead)}
+                        disabled={isGeneratingAudio}
+                        aria-label="Listen to this section"
+                    >
+                        {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
+                    </Button>
                 </CardTitle>
             </CardHeader>
             <CardContent>

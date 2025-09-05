@@ -1,6 +1,11 @@
+import { useState, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+import { textToSpeech } from '@/ai/flows/text-to-speech';
+import { Volume2, Loader } from 'lucide-react';
 import type { Analysis } from '@/app/upload/page';
 
 interface DocumentAnalysisProps {
@@ -9,6 +14,11 @@ interface DocumentAnalysisProps {
 }
 
 export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps) {
+  const { toast } = useToast();
+  const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
+  const [audioData, setAudioData] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   if (isLoading) {
     return (
       <Card className="shadow-lg">
@@ -39,17 +49,67 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
     return (
       <Card className="shadow-lg flex items-center justify-center h-full">
         <CardContent className="text-center p-6">
-          <p className="text-muted-foreground">No analysis available.</p>
+          <p className="text-muted-foreground">No analysis available. Upload a document to get started.</p>
         </CardContent>
       </Card>
     );
   }
+  
+  const handlePlayAudio = async (text: string) => {
+    if (audioData) {
+        if (audioRef.current) {
+            audioRef.current.play();
+        }
+        return;
+    }
+    
+    setIsGeneratingAudio(true);
+    try {
+      const response = await textToSpeech(text);
+      const newAudioData = response.media;
+      setAudioData(newAudioData);
+
+      const audio = new Audio(newAudioData);
+      audioRef.current = audio;
+      audio.play();
+
+    } catch (error) {
+      console.error('Error generating audio:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Audio Generation Failed',
+        description: 'Could not generate audio for the analysis.',
+      });
+    } finally {
+      setIsGeneratingAudio(false);
+    }
+  };
+
+  const textToRead = `
+    Document Type: ${analysis.documentType}.
+    Purpose: ${analysis.purpose}.
+    Summary: ${analysis.summary}.
+    Keywords: ${analysis.keywords.join(', ')}.
+  `;
 
   return (
     <Card className="shadow-lg">
       <CardHeader>
-        <CardTitle className="text-2xl">{analysis.documentType}</CardTitle>
-        <CardDescription>{analysis.purpose}</CardDescription>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle className="text-2xl">{analysis.documentType}</CardTitle>
+            <CardDescription>{analysis.purpose}</CardDescription>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => handlePlayAudio(textToRead)}
+            disabled={isGeneratingAudio}
+            aria-label="Listen to analysis"
+          >
+            {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

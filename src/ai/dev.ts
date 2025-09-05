@@ -8,3 +8,4 @@ import '@/ai/flows/summarize-uploaded-document.ts';
 import '@/ai/flows/interactive-legal-guidance.ts';
 import '@/ai/flows/extract-document-text.ts';
 import '@/ai/flows/spot-trap.ts';
+import '@/ai/flows/text-to-speech.ts';
