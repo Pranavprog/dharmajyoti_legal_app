@@ -61,7 +61,7 @@ const interactiveLegalGuidanceFlow = ai.defineFlow(
     outputSchema: InteractiveLegalGuidanceOutputSchema,
   },
   async input => {
-    const {text} = await interactiveLegalGuidancePrompt(input);
-    return text!;
+    const {output} = await interactiveLegalGuidancePrompt(input);
+    return output || '';
   }
 );
