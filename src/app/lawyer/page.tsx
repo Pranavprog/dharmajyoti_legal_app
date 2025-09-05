@@ -25,7 +25,7 @@ export default function LawyerPage() {
     {
       role: 'assistant',
       content:
-        "Hello! I'm DharmaJyoti, your AI legal assistant. How can I help you today? You can ask me general legal questions.",
+        "Hello! I'm your Mini Lawyer assistant. Paste in a clause or describe a situation, and tell me your location (city/state/country). I'll give you a quick, simple analysis based on local laws.",
     },
   ]);
   const [isChatting, setIsChatting] = useState(false);
@@ -46,7 +46,7 @@ export default function LawyerPage() {
 
     try {
       const response = await interactiveLegalGuidance(userInput);
-      setMessages([...newMessages, { role: 'assistant', content: response }]);
+      setMessages([...newMessages, { role: 'assistant', content: response ?? "I'm sorry, I couldn't process that. Could you try rephrasing?" }]);
     } catch (error) {
       console.error(error);
       setMessages([
@@ -77,7 +77,7 @@ export default function LawyerPage() {
                 isLoading={isChatting}
                 onSendMessage={handleSendMessage}
                 form={form}
-                placeholder="Ask a legal question..."
+                placeholder="Paste text here and include your location..."
             />
         </CardContent>
       </Card>
