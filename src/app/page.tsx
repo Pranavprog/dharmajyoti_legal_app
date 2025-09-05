@@ -41,7 +41,7 @@ export default function Home() {
                     DharmaJyoti
                 </h1>
                 <p className="mt-4 text-lg text-foreground/80 md:text-xl">
-                    Your AI-powered legal assistant to help you navigate complex documents with confidence.
+                    Decoding Hidden Agreements & Rewriting with Multilingual Accuracy for Justice, Your Own Trustworthy Insight
                 </p>
             </div>
         </div>
