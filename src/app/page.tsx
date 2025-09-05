@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { Bot, Search, Scale, ShieldCheck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const features = [
   {
@@ -60,19 +62,64 @@ export default function Home() {
 }
 
 function FeatureCard({ title, description, href, icon }: (typeof features)[0]) {
+    const divRef = useRef<HTMLDivElement>(null);
+    const [isFocused, setIsFocused] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [opacity, setOpacity] = useState(0);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!divRef.current || isFocused) return;
+
+        const div = divRef.current;
+        const rect = div.getBoundingClientRect();
+
+        setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    };
+
+    const handleFocus = () => {
+        setIsFocused(true);
+        setOpacity(1);
+    };
+
+    const handleBlur = () => {
+        setIsFocused(false);
+        setOpacity(0);
+    };
+
+    const handleMouseEnter = () => {
+        setOpacity(1);
+    };
+
+    const handleMouseLeave = () => {
+        setOpacity(0);
+    };
+
     return (
-      <div className="group perspective">
-        <Link href={href}>
-          <div className="relative h-full w-full rounded-xl shadow-lg transition-all duration-500 preserve-3d group-hover:[transform:rotateY(5deg)_rotateX(10deg)]">
-            <Card className="h-full w-full flex flex-col items-center justify-center text-center p-6 bg-card/80 backdrop-blur-sm border border-white/10 shadow-xl">
-              <div className="mb-4 text-primary transition-transform duration-500 group-hover:scale-110">{icon}</div>
+      <Link href={href}>
+        <div
+            ref={divRef}
+            onMouseMove={handleMouseMove}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="relative h-full w-full overflow-hidden rounded-xl border border-border bg-gradient-to-r from-card to-secondary p-px shadow-lg transition-all duration-300 hover:border-primary/50"
+        >
+            <div
+                className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300"
+                style={{
+                    opacity,
+                    background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, hsl(var(--primary)/0.2), transparent 40%)`,
+                }}
+            />
+            <Card className="h-full w-full flex flex-col items-center justify-center text-center p-6 bg-card/80 backdrop-blur-sm">
+              <div className="mb-4 text-primary">{icon}</div>
               <CardTitle className="text-xl font-bold">{title}</CardTitle>
               <CardContent className="p-0 mt-2 text-sm text-foreground/70">
                 <p>{description}</p>
               </CardContent>
             </Card>
-          </div>
-        </Link>
-      </div>
+        </div>
+      </Link>
     );
 }
