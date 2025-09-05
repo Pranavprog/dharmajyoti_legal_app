@@ -8,6 +8,7 @@ import { AlertTriangle, FileText, Lightbulb, ShieldCheck, Siren } from 'lucide-r
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
 import { spotTraps, SpotTrapsOutput } from '@/ai/flows/spot-trap';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Progress } from '@/components/ui/progress';
 
 export default function SpotTrapPage() {
   const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
@@ -60,8 +61,24 @@ export default function SpotTrapPage() {
     </div>
   );
   
+  const renderLoadingView = () => (
+    <div className="w-full max-w-2xl">
+      <Card className="shadow-xl text-center">
+        <CardHeader>
+          <CardTitle className="text-2xl">Analyzing Document</CardTitle>
+          <CardDescription>Please wait while we scan your document for potential traps. This may take a moment.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
+                <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
+            </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   const renderAnalysisView = () => (
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl">
         <div className="md:col-span-1">
             <Card className="shadow-lg sticky top-8">
                 <CardHeader>
@@ -87,9 +104,19 @@ export default function SpotTrapPage() {
      </div>
   );
 
+  const renderContent = () => {
+    if (isAnalyzing) {
+      return renderLoadingView();
+    }
+    if (!document) {
+      return renderInitialView();
+    }
+    return renderAnalysisView();
+  }
+
   return (
     <main className="container mx-auto px-4 py-12 md:py-20 flex justify-center">
-        {!document || (isAnalyzing && !analysis) ? renderInitialView() : renderAnalysisView()}
+        {renderContent()}
     </main>
   );
 }
