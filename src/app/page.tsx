@@ -37,6 +37,7 @@ export interface Analysis {
   summary: string;
   documentType: string;
   purpose: string;
+  keywords: string[];
 }
 
 const chatSchema = z.object({
@@ -95,6 +96,7 @@ export default function Home() {
           summary: summaryRes.summary,
           documentType: typeRes.documentType,
           purpose: typeRes.purpose,
+          keywords: summaryRes.keywords,
         });
         setMessages([
           {

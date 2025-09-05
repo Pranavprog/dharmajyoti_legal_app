@@ -1,9 +1,4 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Analysis } from '@/app/page';
@@ -43,25 +38,35 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
         <CardTitle>Document Analysis</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-6">
+          <div className="space-y-4">
             <div>
-                <h3 className="font-semibold text-sm">Document Type</h3>
-                <p className="text-sm text-muted-foreground capitalize">{analysis.documentType}</p>
+              <h3 className="font-semibold text-sm">Document Type</h3>
+              <p className="text-sm text-muted-foreground capitalize">
+                {analysis.documentType}
+              </p>
             </div>
-             <div>
-                <h3 className="font-semibold text-sm">Purpose</h3>
-                <p className="text-sm text-muted-foreground">{analysis.purpose}</p>
+            <div>
+              <h3 className="font-semibold text-sm">Purpose</h3>
+              <p className="text-sm text-muted-foreground">{analysis.purpose}</p>
             </div>
-          <Accordion type="single" collapsible defaultValue="item-1" className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="text-base">Summary</AccordionTrigger>
-              <AccordionContent>
-                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                  {analysis.summary}
-                </p>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+            <div>
+              <h3 className="font-semibold text-sm">Summary</h3>
+              <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                {analysis.summary}
+              </p>
+            </div>
+          </div>
+          <div>
+            <h3 className="font-semibold text-sm mb-2">Keywords</h3>
+            <div className="flex flex-wrap gap-2">
+              {analysis.keywords.map((keyword, index) => (
+                <Badge key={index} variant="secondary">
+                  {keyword}
+                </Badge>
+              ))}
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

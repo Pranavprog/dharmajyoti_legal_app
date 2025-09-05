@@ -23,8 +23,9 @@ const SummarizeUploadedDocumentOutputSchema = z.object({
   summary: z
     .string()
     .describe(
-      'A clear, plain-language summary of the legal document, preserving the original structure.'
+      'A very small and crisp summary of the legal document (2-3 sentences max).'
     ),
+  keywords: z.array(z.string()).describe('A list of important keywords from the document.'),
 });
 export type SummarizeUploadedDocumentOutput = z.infer<typeof SummarizeUploadedDocumentOutputSchema>;
 
@@ -38,7 +39,13 @@ const summarizeUploadedDocumentPrompt = ai.definePrompt({
   name: 'summarizeUploadedDocumentPrompt',
   input: {schema: SummarizeUploadedDocumentInputSchema},
   output: {schema: SummarizeUploadedDocumentOutputSchema},
-  prompt: `You are an AI legal assistant. Summarize the following legal document into clear, plain language. Preserve the original structure (titles, sections, clauses) while simplifying legal or complex wording into clear, plain layman’s terms.\n\nDocument:\n{{{documentText}}}`,
+  prompt: `You are an AI legal assistant. Analyze the following legal document.
+
+  1.  Provide a very small and crisp summary (2-3 sentences maximum) in clear, plain language.
+  2.  Extract a list of the most important keywords or terms.
+
+  Document:
+  {{{documentText}}}`,
 });
 
 const summarizeUploadedDocumentFlow = ai.defineFlow(
