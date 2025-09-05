@@ -34,7 +34,7 @@ export async function interactiveLegalGuidance(
 const interactiveLegalGuidancePrompt = ai.definePrompt({
   name: 'interactiveLegalGuidancePrompt',
   input: {schema: InteractiveLegalGuidanceInputSchema},
-  output: {schema: InteractiveLegalGuidanceOutputSchema.nullable()},
+  output: {schema: z.string().nullable()},
   prompt: `You are MiniLawyer, an AI assistant that scans user-provided text (contracts, agreements, or problem descriptions) and returns short, clear, everyday-language answers.
 
 You must always adapt your responses to the user’s local law (city, district, state, country).
