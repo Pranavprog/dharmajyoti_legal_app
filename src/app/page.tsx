@@ -26,7 +26,7 @@ const features = [
   {
     title: 'Spot Trap',
     description: 'Identify risky clauses and unfair terms in your documents.',
-    href: '/tbd',
+    href: '/spot-trap',
     icon: <ShieldCheck className="h-10 w-10" />,
   },
 ];
