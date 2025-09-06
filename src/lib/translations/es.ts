@@ -1,3 +1,4 @@
+
 export const es = {
   nav: {
     home: 'Inicio',
@@ -69,7 +70,7 @@ export const es = {
   future: {
     processing: 'Procesando...',
     extracting: 'Extrayendo texto...',
-    generating: 'Generando escenarios...',
+    generating: 'Generando scenarios...',
     title: 'Ver el Futuro',
     description: 'Sube un documento para ver los posibles mejores y peores escenarios.',
     loadingTitle: 'Mirando hacia el Futuro...',
@@ -134,5 +135,13 @@ export const es = {
     title: 'Información sobre el Procesamiento de PDF',
     description: 'Los archivos PDF se procesan en el servidor para extraer texto, lo que puede incluir el uso de OCR para documentos escaneados. Esto puede tardar un poco más. Al continuar, aceptas este proceso. El archivo se enviará a la IA para su análisis.',
     confirm: 'Entendido',
+  },
+  guidebot: {
+    title: 'Guía de DharmaJyoti',
+    description: '¿Necesitas ayuda? Aquí tienes una guía rápida de nuestras características principales.',
+    upload: 'Ve a "Empezar" en la barra de navegación. Puedes subir un archivo de texto o PDF, o usar tu cámara para tomar una foto de tu documento. Nuestra IA lo analizará y proporcionará un resumen, identificará su propósito y te permitirá chatear sobre el contenido.',
+    lawyer: 'Visita la página "Mini Abogado" desde el menú principal. Pega cualquier cláusula legal o describe una situación, asegurándote de incluir tu ubicación (ciudad/estado/país). La IA te dará un análisis rápido y sencillo basado en las leyes locales pertinentes.',
+    future: 'Navega a la página "Ver el Futuro". Sube tu documento legal y nuestra IA generará dos historias cortas: una que describe el mejor resultado posible y otra para el peor de los casos, junto con consejos prácticos.',
+    trap: 'Ve a la página "Detectar Trampas". Sube tu documento y la IA lo escaneará cuidadosamente para identificar posibles lagunas, cláusulas problemáticas y otros riesgos ocultos de los que deberías estar al tanto.'
   }
 };

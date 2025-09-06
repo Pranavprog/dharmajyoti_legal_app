@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -128,7 +129,42 @@
     height: calc(100% - 4px);
     width: calc(100% - 4px);
   }
+
+  .glitter-button {
+    position: relative;
+    overflow: hidden;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .glitter-button:hover {
+    transform: scale(1.1);
+  }
+
+  .glitter-button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 180deg at 50% 50%,
+      hsla(var(--primary), 0.8),
+      hsla(var(--accent), 0.7),
+      hsla(var(--primary), 0.8),
+      hsla(var(--accent), 0.9),
+      hsla(var(--primary), 0.8)
+    );
+    animation: rotate-glow 5s linear infinite;
+  }
+  .glitter-button > * {
+    position: relative;
+    z-index: 1;
+  }
 }
+
 
 @keyframes rotate-glow {
   0% {

@@ -1,3 +1,4 @@
+
 export const fr = {
   nav: {
     home: 'Accueil',
@@ -134,5 +135,13 @@ export const fr = {
     title: 'Informations sur le Traitement des PDF',
     description: 'Les fichiers PDF sont traités sur le serveur pour en extraire le texte, ce qui peut inclure l\'utilisation de l\'OCR pour les documents numérisés. Cela peut prendre un peu plus de temps. En continuant, vous consentez à ce processus. Le fichier sera envoyé à l\'IA pour analyse.',
     confirm: 'Compris',
+  },
+  guidebot: {
+    title: 'Guide DharmaJyoti',
+    description: 'Besoin d\'aide ? Voici un guide rapide de nos principales fonctionnalités.',
+    upload: 'Allez dans "Commencer" depuis la barre de navigation. Vous pouvez soit télécharger un fichier texte ou PDF, soit utiliser votre appareil photo pour prendre une photo de votre document. Notre IA l\'analysera et fournira un résumé, identifiera son objectif et vous permettra de discuter du contenu.',
+    lawyer: 'Visitez la page "Mini Juriste" depuis le menu principal. Collez n\'importe quelle clause juridique ou décrivez une situation, en veillant à inclure votre emplacement (ville/état/pays). L\'IA vous donnera une analyse rapide et simple basée sur les lois locales pertinentes.',
+    future: 'Naviguez vers la page "Voir le Futur". Téléchargez votre document juridique, et notre IA générera deux courtes histoires : une décrivant le meilleur résultat possible et une pour le pire des cas, ainsi que des conseils pratiques.',
+    trap: 'Allez à la page "Détecter les Pièges". Téléchargez votre document, et l\'IA l\'analysera attentivement pour identifier les failles potentielles, les clauses problématiques et autres risques cachés dont vous devriez être conscient.'
   }
 };

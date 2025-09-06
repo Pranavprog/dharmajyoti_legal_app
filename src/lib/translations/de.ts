@@ -1,3 +1,4 @@
+
 export const de = {
   nav: {
     home: 'Startseite',
@@ -134,5 +135,13 @@ export const de = {
     title: 'Informationen zur PDF-Verarbeitung',
     description: 'PDF-Dateien werden auf dem Server verarbeitet, um Text zu extrahieren, was die Verwendung von OCR für gescannte Dokumente beinhalten kann. Dies kann etwas länger dauern. Indem Sie fortfahren, stimmen Sie diesem Prozess zu. Die Datei wird zur Analyse an die KI gesendet.',
     confirm: 'Verstanden',
+  },
+  guidebot: {
+    title: 'DharmaJyoti Anleitung',
+    description: 'Benötigen Sie Hilfe? Hier ist eine Kurzanleitung zu unseren Hauptfunktionen.',
+    upload: 'Gehen Sie in der Navigationsleiste auf "Loslegen". Sie können entweder eine Text- oder PDF-Datei hochladen oder Ihre Kamera verwenden, um ein Bild Ihres Dokuments aufzunehmen. Unsere KI analysiert es, stellt eine Zusammenfassung bereit, identifiziert den Zweck und lässt Sie über den Inhalt chatten.',
+    lawyer: 'Besuchen Sie die Seite "Mini-Anwalt" im Hauptmenü. Fügen Sie eine beliebige Rechtsklausel ein oder beschreiben Sie eine Situation und geben Sie unbedingt Ihren Standort (Stadt/Bundesland/Land) an. Die KI gibt Ihnen eine schnelle, einfache Analyse basierend auf den relevanten lokalen Gesetzen.',
+    future: 'Navigieren Sie zur Seite "Zukunft sehen". Laden Sie Ihr juristisches Dokument hoch, und unsere KI generiert zwei Kurzgeschichten: eine, die das bestmögliche Ergebnis beschreibt, und eine für das schlimmste Szenario, zusammen mit umsetzbaren Ratschlägen.',
+    trap: 'Gehen Sie zur Seite "Fallen erkennen". Laden Sie Ihr Dokument hoch, und die KI scannt es sorgfältig, um potenzielle Schlupflöcher, problematische Klauseln und andere versteckte Risiken zu identifizieren, auf die Sie achten sollten.'
   }
 };

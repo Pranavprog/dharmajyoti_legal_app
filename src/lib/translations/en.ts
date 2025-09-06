@@ -1,3 +1,4 @@
+
 export const en = {
   nav: {
     home: 'Home',
@@ -134,5 +135,13 @@ export const en = {
     title: 'PDF Processing Information',
     description: 'PDF files are processed on the server to extract text, which may include using OCR for scanned documents. This can take a bit longer. By proceeding, you consent to this process. The file will be sent to the AI for analysis.',
     confirm: 'Got it',
+  },
+  guidebot: {
+    title: 'DharmaJyoti Guide',
+    description: 'Need help? Here’s a quick guide to our main features.',
+    upload: 'Go to "Get Started" from the navigation bar. You can either upload a text or PDF file, or use your camera to take a picture of your document. Our AI will analyze it and provide a summary, identify its purpose, and let you chat about the contents.',
+    lawyer: 'Visit the "Mini Lawyer" page from the main menu. Paste any legal clause or describe a situation, making sure to include your location (city/state/country). The AI will give you a quick, simple analysis based on relevant local laws.',
+    future: 'Navigate to the "See Future" page. Upload your legal document, and our AI will generate two short stories: one describing the best-case outcome and one for the worst-case scenario, along with actionable advice.',
+    trap: 'Go to the "Spot Trap" page. Upload your document, and the AI will carefully scan it to identify potential loopholes, problematic clauses, and other hidden risks you should be aware of.'
   }
 };
