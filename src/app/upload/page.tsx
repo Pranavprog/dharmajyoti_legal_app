@@ -11,7 +11,7 @@ import { DocumentViewer } from '@/components/document/document-viewer';
 import { DocumentAnalysis } from '@/components/document/document-analysis';
 import { summarizeUploadedDocument } from '@/ai/flows/summarize-uploaded-document';
 import { identifyDocumentTypeAndPurpose } from '@/ai/flows/identify-document-type-and-purpose';
-import { interactiveLegalGuidance, InteractiveLegalGuidanceInput } from '@/ai/flows/interactive-legal-guidance';
+import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -197,8 +197,7 @@ export default function UploadPage() {
         guidanceInputText = `The user has uploaded a document with the following content:\n\n---\n${document.content}\n---\n\n${guidanceInputText}`;
       }
       
-      const input: InteractiveLegalGuidanceInput = { message: guidanceInputText, language };
-      const response = await interactiveLegalGuidance(input);
+      const response = await interactiveLegalGuidance({ message: guidanceInputText, language });
       
       if (response) {
         setMessages([...newMessages, { role: 'assistant', content: response }]);

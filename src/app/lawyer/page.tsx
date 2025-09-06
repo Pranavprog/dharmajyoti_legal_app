@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChatPanel } from '@/components/chat/chat-panel';
-import { interactiveLegalGuidance, InteractiveLegalGuidanceInput } from '@/ai/flows/interactive-legal-guidance';
+import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BotMessageSquare } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
@@ -48,8 +48,7 @@ export default function LawyerPage() {
     form.reset();
 
     try {
-      const input: InteractiveLegalGuidanceInput = { message: userInput, language };
-      const response = await interactiveLegalGuidance(input);
+      const response = await interactiveLegalGuidance({ message: userInput, language });
       setMessages([...newMessages, { role: 'assistant', content: response ?? t.common.error }]);
     } catch (error) {
       console.error(error);

@@ -4,33 +4,31 @@
  * @fileOverview This file defines a Genkit flow for providing interactive legal guidance to users in a chatbot mode.
  *
  * - interactiveLegalGuidance - An async function that takes a user's question as input and returns legal guidance.
- * - InteractiveLegalGuidanceInput - The input type for the interactiveLegalGuidance function.
- * - InteractiveLegalGuidanceOutput - The return type for the interactiveLegalGuidanceOutput function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-export const InteractiveLegalGuidanceInputSchema = z.object({
+const InteractiveLegalGuidanceInputSchema = z.object({
   message: z.string().describe("The user's message or question."),
   language: z.string().optional().describe('The language for the AI to respond in.'),
 });
-export type InteractiveLegalGuidanceInput = z.infer<
+type InteractiveLegalGuidanceInput = z.infer<
   typeof InteractiveLegalGuidanceInputSchema
 >;
 
-export const InteractiveLegalGuidanceOutputSchema = z.object({
+const InteractiveLegalGuidanceOutputSchema = z.object({
   response: z.string().describe("The AI's response."),
 });
-export type InteractiveLegalGuidanceOutput = z.infer<
-  typeof InteractiveLegalGuidanceOutputSchema
->;
 
 export async function interactiveLegalGuidance(
   input: InteractiveLegalGuidanceInput
 ): Promise<string> {
   const result = await interactiveLegalGuidanceFlow(input);
-  return result.response;
+  if (result && result.response) {
+    return result.response;
+  }
+  return "I'm sorry, I couldn't process that. Could you try rephrasing?";
 }
 
 const interactiveLegalGuidancePrompt = ai.definePrompt({
