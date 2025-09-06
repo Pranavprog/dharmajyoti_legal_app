@@ -139,26 +139,30 @@
   }
 
   .glitter-button:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 
   .glitter-button::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
+    top: 50%;
+    left: 50%;
     width: 200%;
     height: 200%;
     background: conic-gradient(
       from 180deg at 50% 50%,
-      hsla(var(--primary), 0.8),
-      hsla(var(--accent), 0.7),
-      hsla(var(--primary), 0.8),
-      hsla(var(--accent), 0.9),
-      hsla(var(--primary), 0.8)
+      hsla(var(--primary), 0.8) 0%,
+      hsla(var(--accent), 0.7) 20%,
+      hsla(var(--primary), 0.9) 40%,
+      hsla(var(--accent), 0.8) 60%,
+      hsla(var(--primary), 1) 80%,
+      hsla(var(--primary), 0.8) 100%
     );
+    transform-origin: center;
     animation: rotate-glow 5s linear infinite;
+    transform: translate(-50%, -50%);
   }
+
   .glitter-button > * {
     position: relative;
     z-index: 1;
@@ -168,9 +172,9 @@
 
 @keyframes rotate-glow {
   0% {
-    transform: translateX(-50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
-    transform: translateX(-50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
