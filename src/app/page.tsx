@@ -1,9 +1,11 @@
+
 'use client';
 
 import Link from 'next/link';
 import { Bot, Search, Scale, ShieldCheck } from 'lucide-react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/hooks/use-translations';
+import { Guidebot } from '@/components/guidebot';
 
 export default function Home() {
   const t = useTranslations();
@@ -58,6 +60,7 @@ export default function Home() {
           ))}
         </div>
       </section>
+      <Guidebot />
     </main>
   );
 }

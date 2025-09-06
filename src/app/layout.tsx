@@ -10,7 +10,6 @@ import { LanguageProvider } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useTranslations } from '@/hooks/use-translations';
 import { usePathname } from 'next/navigation';
-import { Guidebot } from '@/components/guidebot';
 
 function AppLayout({
   children,
@@ -46,7 +45,6 @@ function AppLayout({
       </header>
       {children}
       <Toaster />
-      <Guidebot />
     </>
   )
 }
