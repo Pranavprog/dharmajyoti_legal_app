@@ -291,7 +291,7 @@ export default function UploadPage() {
   );
   
   const renderMainView = () => {
-    if (isAnalyzing && !document?.content.startsWith(t.upload.processing)) {
+    if (isAnalyzing) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Card className="w-full max-w-2xl shadow-lg text-center">
@@ -324,7 +324,11 @@ export default function UploadPage() {
         <div className="flex flex-col gap-4 h-full min-h-[400px]">
           <div className='flex justify-between items-center'>
             <h2 className="text-2xl font-semibold">{t.common.documentViewer}</h2>
-            <Button variant="outline" onClick={() => setDocument(null)}>{t.upload.uploadNew}</Button>
+            <Button variant="outline" onClick={() => {
+              setDocument(null);
+              setAnalysis(null);
+              setView('options');
+            }}>{t.upload.uploadNew}</Button>
           </div>
           <DocumentViewer content={document.content} />
         </div>

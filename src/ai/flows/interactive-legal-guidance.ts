@@ -4,32 +4,39 @@
  * @fileOverview This file defines a Genkit flow for providing interactive legal guidance to users in a chatbot mode.
  *
  * - interactiveLegalGuidance - An async function that takes a user's question as input and returns legal guidance.
- * - InteractiveLegalGuidanceInput - The input type for the interactiveLegalGuidance function (a string).
- * - InteractiveLegalGuidanceOutput - The return type for the interactiveLegalGuidanceOutput function (a string).
+ * - InteractiveLegalGuidanceInput - The input type for the interactiveLegalGuidance function.
+ * - InteractiveLegalGuidanceOutput - The return type for the interactiveLegalGuidanceOutput function.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const InteractiveLegalGuidanceInputSchema = z.object({
-  message: z.string().describe('The user\'s message or question.'),
+export const InteractiveLegalGuidanceInputSchema = z.object({
+  message: z.string().describe("The user's message or question."),
   language: z.string().optional().describe('The language for the AI to respond in.'),
 });
-type InteractiveLegalGuidanceInput = z.infer<typeof InteractiveLegalGuidanceInputSchema>;
+export type InteractiveLegalGuidanceInput = z.infer<
+  typeof InteractiveLegalGuidanceInputSchema
+>;
 
-const InteractiveLegalGuidanceOutputSchema = z.string().describe("The AI's response.");
-type InteractiveLegalGuidanceOutput = z.infer<typeof InteractiveLegalGuidanceOutputSchema>;
+export const InteractiveLegalGuidanceOutputSchema = z.object({
+  response: z.string().describe("The AI's response."),
+});
+export type InteractiveLegalGuidanceOutput = z.infer<
+  typeof InteractiveLegalGuidanceOutputSchema
+>;
 
 export async function interactiveLegalGuidance(
   input: InteractiveLegalGuidanceInput
-): Promise<InteractiveLegalGuidanceOutput> {
-  return interactiveLegalGuidanceFlow(input);
+): Promise<string> {
+  const result = await interactiveLegalGuidanceFlow(input);
+  return result.response;
 }
 
 const interactiveLegalGuidancePrompt = ai.definePrompt({
   name: 'interactiveLegalGuidancePrompt',
   input: {schema: InteractiveLegalGuidanceInputSchema},
-  output: {schema: InteractiveLegalGuidanceOutputSchema.nullable()},
+  output: {schema: InteractiveLegalGuidanceOutputSchema},
   prompt: `You are MiniLawyer, an AI assistant that provides short, clear, everyday-language answers about legal texts or problems.
 Respond in the following language: {{language}}.
 
@@ -65,6 +72,11 @@ const interactiveLegalGuidanceFlow = ai.defineFlow(
   },
   async (input) => {
     const {output} = await interactiveLegalGuidancePrompt(input);
-    return output ?? "I'm sorry, I couldn't process that. Could you try rephrasing?";
+    
+    if (!output?.response) {
+       return { response: "I'm sorry, I couldn't process that. Could you try rephrasing?" };
+    }
+    
+    return output;
   }
 );
