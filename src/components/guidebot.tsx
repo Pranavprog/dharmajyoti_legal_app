@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MessageSquareQuestion, Bot, Search, Scale, ShieldCheck } from 'lucide-react';
+import { MessageSquareQuote, Bot, Search, Scale, ShieldCheck } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
 
 export function Guidebot() {
@@ -46,7 +46,7 @@ export function Guidebot() {
         onClick={() => setIsOpen(true)}
         aria-label="Open Guide"
       >
-        <MessageSquareQuestion className="h-8 w-8" />
+        <MessageSquareQuote className="h-8 w-8" />
       </Button>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
