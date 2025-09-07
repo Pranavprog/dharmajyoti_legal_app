@@ -2,10 +2,12 @@
 'use client';
 
 import Link from 'next/link';
-import { Bot, Search, Scale, ShieldCheck } from 'lucide-react';
+import { Bot, Search, Scale, ShieldCheck, Star } from 'lucide-react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/hooks/use-translations';
 import { Guidebot } from '@/components/guidebot';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const t = useTranslations();
@@ -60,6 +62,15 @@ export default function Home() {
           ))}
         </div>
       </section>
+      
+       <section className="container px-4 md:px-6 pb-20 text-center">
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">{t.home.review.title}</h2>
+        <p className="mx-auto max-w-[600px] text-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+          {t.home.review.description}
+        </p>
+        <StarRating />
+      </section>
+
       <Guidebot />
     </main>
   );
@@ -78,5 +89,37 @@ function FeatureCard({ title, description, href, icon }: {title: string, descrip
         </div>
       </Card>
     </Link>
+  );
+}
+
+function StarRating() {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  return (
+    <div className="flex justify-center gap-2 mt-8">
+      {[...Array(5)].map((star, index) => {
+        const ratingValue = index + 1;
+        return (
+          <button
+            type="button"
+            key={ratingValue}
+            className="transition-transform duration-200 hover:scale-125"
+            onClick={() => setRating(ratingValue)}
+            onMouseEnter={() => setHover(ratingValue)}
+            onMouseLeave={() => setHover(0)}
+          >
+            <Star
+              className={cn(
+                "h-10 w-10",
+                ratingValue <= (hover || rating)
+                  ? "text-yellow-400 fill-yellow-400"
+                  : "text-gray-300"
+              )}
+            />
+          </button>
+        );
+      })}
+    </div>
   );
 }

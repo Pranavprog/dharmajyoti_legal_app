@@ -25,6 +25,10 @@ export const de = {
         title: 'Fallen erkennen',
         description: 'Identifizieren Sie riskante Klauseln und unfaire Bedingungen in Ihren Dokumenten.',
       },
+    },
+    review: {
+        title: 'Bewerten Sie unsere App',
+        description: 'Wir würden uns über Ihr Feedback freuen. Lassen Sie uns wissen, wie wir uns machen, indem Sie eine Sternebewertung hinterlassen.'
     }
   },
   about: {

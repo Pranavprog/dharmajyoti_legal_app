@@ -25,6 +25,10 @@ export const es = {
         title: 'Detectar Trampas',
         description: 'Identifica cláusulas de riesgo y términos injustos en tus documentos.',
       },
+    },
+    review: {
+        title: 'Califica Nuestra Aplicación',
+        description: 'Nos encantaría conocer tu opinión. Déjanos saber cómo lo estamos haciendo dejando una calificación de estrellas.'
     }
   },
   about: {

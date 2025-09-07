@@ -25,6 +25,10 @@ export const fr = {
         title: 'Détecter les Pièges',
         description: 'Identifiez les clauses à risque et les conditions inéquitables dans vos documents.',
       },
+    },
+    review: {
+        title: 'Évaluez Notre Application',
+        description: 'Nous aimerions connaître votre avis. Faites-nous savoir comment nous nous en sortons en laissant une évaluation par étoiles.'
     }
   },
   about: {

@@ -25,6 +25,10 @@ export const en = {
         title: 'Spot Trap',
         description: 'Identify risky clauses and unfair terms in your documents.',
       },
+    },
+    review: {
+      title: 'Rate Our App',
+      description: 'We\'d love to hear your feedback. Let us know how we\'re doing by leaving a star rating.'
     }
   },
   about: {

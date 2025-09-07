@@ -25,6 +25,10 @@ export const zh = {
         title: '发现陷阱',
         description: '识别您文件中的风险条款和不公平条款。',
       },
+    },
+    review: {
+        title: '评价我们的应用',
+        description: '我们很乐意听到您的反馈。通过留下星级评价，让我们知道我们的表现如何。'
     }
   },
   about: {
