@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MessageSquareQuote, Bot, Search, Scale, ShieldCheck, HelpCircle } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
+import { ScrollArea } from './ui/scroll-area';
 
 export function Guidebot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +68,7 @@ export function Guidebot() {
       </Button>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent className="w-full sm:max-w-md">
+        <SheetContent className="w-full sm:max-w-md flex flex-col">
           <SheetHeader className="text-left mb-6">
             <SheetTitle className="text-2xl flex items-center">
                 <Bot className="h-7 w-7 mr-3 text-primary" />
@@ -77,21 +78,23 @@ export function Guidebot() {
               {t.guidebot.description}
             </SheetDescription>
           </SheetHeader>
-          <Accordion type="single" collapsible className="w-full">
-            {sections.map((section) => (
-              <AccordionItem key={section.id} value={section.id}>
-                <AccordionTrigger className="text-lg font-medium hover:no-underline">
-                    <div className="flex items-center">
-                        {section.icon}
-                        {section.title}
-                    </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-base text-foreground/80 pl-4 border-l-2 border-primary/20 ml-4">
-                  {section.content}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <ScrollArea className="flex-1 pr-6">
+            <Accordion type="single" collapsible className="w-full">
+                {sections.map((section) => (
+                <AccordionItem key={section.id} value={section.id}>
+                    <AccordionTrigger className="text-lg font-medium hover:no-underline">
+                        <div className="flex items-center">
+                            {section.icon}
+                            {section.title}
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-base text-foreground/80 pl-4 border-l-2 border-primary/20 ml-4">
+                    {section.content}
+                    </AccordionContent>
+                </AccordionItem>
+                ))}
+            </Accordion>
+          </ScrollArea>
         </SheetContent>
       </Sheet>
     </>
