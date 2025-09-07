@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,23 +19,22 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
   const { toast } = useToast();
   const t = useTranslations();
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
-  const [audioData, setAudioData] = useState<string | null>(null);
+  const audioDataRef = useRef<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const textToRead = analysis ? `
-    ${t.analysis.docType}: ${analysis.documentType}.
-    ${t.analysis.purpose}: ${analysis.purpose}.
-    ${t.analysis.summary}: ${analysis.summary}.
-    ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
-  ` : '';
 
   useEffect(() => {
     const generateAudio = async () => {
         if (!analysis) return;
         setIsGeneratingAudio(true);
         try {
+            const textToRead = `
+              ${t.analysis.docType}: ${analysis.documentType}.
+              ${t.analysis.purpose}: ${analysis.purpose}.
+              ${t.analysis.summary}: ${analysis.summary}.
+              ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
+            `;
             const response = await textToSpeech(textToRead);
-            setAudioData(response.media);
+            audioDataRef.current = response.media;
         } catch (error) {
             console.error('Error pre-generating audio:', error);
         } finally {
@@ -42,7 +42,7 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
         }
     };
     generateAudio();
-  }, [analysis, textToRead]);
+  }, [analysis, t]);
 
 
   if (isLoading) {
@@ -81,14 +81,14 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
     );
   }
   
-  const handlePlayAudio = async () => {
-    if (audioRef.current && audioRef.current.src === audioData) {
+  const handlePlayAudio = () => {
+    if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
         audioRef.current.play();
         return;
     }
     
-    if (audioData) {
-        const audio = new Audio(audioData);
+    if (audioDataRef.current) {
+        const audio = new Audio(audioDataRef.current);
         audioRef.current = audio;
         audio.play();
     } else if (!isGeneratingAudio) {
@@ -112,10 +112,10 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
             variant="ghost"
             size="icon"
             onClick={handlePlayAudio}
-            disabled={isGeneratingAudio && !audioData}
+            disabled={isGeneratingAudio}
             aria-label={t.common.listen}
           >
-            {isGeneratingAudio && !audioData ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
+            {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
           </Button>
         </div>
       </CardHeader>

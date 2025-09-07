@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -145,35 +146,34 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
     const { toast } = useToast();
     const t = useTranslations();
     const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
-    const [audioData, setAudioData] = useState<string | null>(null);
+    const audioDataRef = useRef<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const textToRead = `${title}. ${content}`;
 
     useEffect(() => {
         const generateAudio = async () => {
             if (!content) return;
             setIsGeneratingAudio(true);
             try {
+                const textToRead = `${title}. ${content}`;
                 const response = await textToSpeech(textToRead);
-                setAudioData(response.media);
+                audioDataRef.current = response.media;
             } catch (error) {
                 console.error('Error pre-generating audio:', error);
-                // Optionally show a toast, but it might be too noisy
             } finally {
                 setIsGeneratingAudio(false);
             }
         };
         generateAudio();
-    }, [content, textToRead]);
+    }, [content, title]);
 
-    const handlePlayAudio = async () => {
-        if (audioRef.current && audioRef.current.src === audioData) {
+    const handlePlayAudio = () => {
+        if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
             audioRef.current.play();
             return;
         }
 
-        if (audioData) {
-            const audio = new Audio(audioData);
+        if (audioDataRef.current) {
+            const audio = new Audio(audioDataRef.current);
             audioRef.current = audio;
             audio.play();
         } else if (!isGeneratingAudio) {
@@ -197,10 +197,10 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
                         variant="ghost"
                         size="icon"
                         onClick={handlePlayAudio}
-                        disabled={isGeneratingAudio && !audioData}
+                        disabled={isGeneratingAudio}
                         aria-label={t.common.listen}
                     >
-                        {isGeneratingAudio && !audioData ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
+                        {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
                     </Button>
                 </CardTitle>
             </CardHeader>
