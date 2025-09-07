@@ -28,7 +28,11 @@ export const en = {
     },
     review: {
       title: 'Rate Our App',
-      description: 'We\'d love to hear your feedback. Let us know how we\'re doing by leaving a star rating.'
+      description: 'We\'d love to hear your feedback. Let us know how we\'re doing by leaving a star rating.',
+      commentPlaceholder: 'Add a comment or suggestion...',
+      submit: 'Submit Review',
+      thankYouTitle: 'Thank You!',
+      thankYouDescription: 'Your feedback has been submitted successfully.'
     }
   },
   about: {

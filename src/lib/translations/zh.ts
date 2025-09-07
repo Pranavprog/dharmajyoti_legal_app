@@ -28,7 +28,11 @@ export const zh = {
     },
     review: {
         title: '评价我们的应用',
-        description: '我们很乐意听到您的反馈。通过留下星级评价，让我们知道我们的表现如何。'
+        description: '我们很乐意听到您的反馈。通过留下星级评价，让我们知道我们的表现如何。',
+        commentPlaceholder: '添加评论或建议...',
+        submit: '提交评论',
+        thankYouTitle: '谢谢！',
+        thankYouDescription: '您的反馈已成功提交。'
     }
   },
   about: {

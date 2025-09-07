@@ -28,7 +28,11 @@ export const fr = {
     },
     review: {
         title: 'Évaluez Notre Application',
-        description: 'Nous aimerions connaître votre avis. Faites-nous savoir comment nous nous en sortons en laissant une évaluation par étoiles.'
+        description: 'Nous aimerions connaître votre avis. Faites-nous savoir comment nous nous en sortons en laissant une évaluation par étoiles.',
+        commentPlaceholder: 'Ajoutez un commentaire ou une suggestion...',
+        submit: 'Envoyer l\'Avis',
+        thankYouTitle: 'Merci !',
+        thankYouDescription: 'Votre avis a été soumis avec succès.'
     }
   },
   about: {

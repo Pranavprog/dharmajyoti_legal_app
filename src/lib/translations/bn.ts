@@ -28,7 +28,11 @@ export const bn = {
     },
     review: {
         title: 'আমাদের অ্যাপ রেট করুন',
-        description: 'আমরা আপনার মতামত শুনতে চাই। একটি স্টার রেটিং দিয়ে আমাদের জানান আমরা কেমন করছি।'
+        description: 'আমরা আপনার মতামত শুনতে চাই। একটি স্টার রেটিং দিয়ে আমাদের জানান আমরা কেমন করছি।',
+        commentPlaceholder: 'একটি মন্তব্য বা পরামর্শ যোগ করুন...',
+        submit: 'রিভিউ জমা দিন',
+        thankYouTitle: 'ধন্যবাদ!',
+        thankYouDescription: 'আপনার মতামত সফলভাবে জমা দেওয়া হয়েছে।'
     }
   },
   about: {
@@ -101,14 +105,14 @@ export const bn = {
     summary: 'সারাংশ',
     keywords: 'কীওয়ার্ড',
   },
-  toast: {
+toast: {
     analysisFailed: 'বিশ্লেষণ ব্যর্থ হয়েছে',
     analysisError: 'আপনার নথি বিশ্লেষণ করার সময় একটি ত্রুটি ঘটেছে। দয়া করে আবার চেষ্টা করুন।',
     cameraDenied: 'ক্যামেরা অ্যাক্সেস প্রত্যাখ্যান করা হয়েছে',
     cameraError: 'এই অ্যাপটি ব্যবহার করতে দয়া করে আপনার ব্রাউজার সেটিংসে ক্যামেরা অনুমতি সক্ষম করুন।',
     cameraAnalysisError: 'ক্যাপচার করা চিত্র বিশ্লেষণ করার সময় একটি ত্রুটি ঘটেছে। দয়া করে আবার চেষ্টা করুন।',
     audioFailed: 'অডিও জেনারেশন ব্যর্থ হয়েছে',
-audioError: 'Could not generate audio for this section.',
+    audioError: 'Could not generate audio for this section.',
     unsupportedFile: 'অসমর্থিত ফাইলের প্রকার',
     unsupportedFileDesc: 'দয়া করে একটি প্লেইন টেক্সট (.txt) বা PDF ফাইল আপলোড করুন।',
   },

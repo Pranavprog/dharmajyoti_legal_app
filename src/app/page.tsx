@@ -8,6 +8,9 @@ import { useTranslations } from '@/hooks/use-translations';
 import { Guidebot } from '@/components/guidebot';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Home() {
   const t = useTranslations();
@@ -95,31 +98,56 @@ function FeatureCard({ title, description, href, icon }: {title: string, descrip
 function StarRating() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
+  const [comment, setComment] = useState("");
+  const { toast } = useToast();
+  const t = useTranslations();
+
+  const handleSubmit = () => {
+    toast({
+      title: t.home.review.thankYouTitle,
+      description: t.home.review.thankYouDescription,
+    });
+    setRating(0);
+    setComment("");
+  };
 
   return (
-    <div className="flex justify-center gap-2 mt-8">
-      {[...Array(5)].map((star, index) => {
-        const ratingValue = index + 1;
-        return (
-          <button
-            type="button"
-            key={ratingValue}
-            className="transition-transform duration-200 hover:scale-125"
-            onClick={() => setRating(ratingValue)}
-            onMouseEnter={() => setHover(ratingValue)}
-            onMouseLeave={() => setHover(0)}
-          >
-            <Star
-              className={cn(
-                "h-10 w-10",
-                ratingValue <= (hover || rating)
-                  ? "text-yellow-400 fill-yellow-400"
-                  : "text-gray-300"
-              )}
-            />
-          </button>
-        );
-      })}
+    <div className="max-w-md mx-auto">
+      <div className="flex justify-center gap-2 mt-8">
+        {[...Array(5)].map((star, index) => {
+          const ratingValue = index + 1;
+          return (
+            <button
+              type="button"
+              key={ratingValue}
+              className="transition-transform duration-200 hover:scale-125"
+              onClick={() => setRating(ratingValue)}
+              onMouseEnter={() => setHover(ratingValue)}
+              onMouseLeave={() => setHover(0)}
+            >
+              <Star
+                className={cn(
+                  "h-10 w-10",
+                  ratingValue <= (hover || rating)
+                    ? "text-yellow-400 fill-yellow-400"
+                    : "text-gray-300"
+                )}
+              />
+            </button>
+          );
+        })}
+      </div>
+      <div className="mt-6 space-y-4">
+        <Textarea
+          placeholder={t.home.review.commentPlaceholder}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          className="bg-card"
+        />
+        <Button onClick={handleSubmit} disabled={rating === 0 && comment.trim() === ''}>
+          {t.home.review.submit}
+        </Button>
+      </div>
     </div>
   );
 }

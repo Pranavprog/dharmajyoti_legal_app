@@ -28,7 +28,11 @@ export const de = {
     },
     review: {
         title: 'Bewerten Sie unsere App',
-        description: 'Wir würden uns über Ihr Feedback freuen. Lassen Sie uns wissen, wie wir uns machen, indem Sie eine Sternebewertung hinterlassen.'
+        description: 'Wir würden uns über Ihr Feedback freuen. Lassen Sie uns wissen, wie wir uns machen, indem Sie eine Sternebewertung hinterlassen.',
+        commentPlaceholder: 'Fügen Sie einen Kommentar oder einen Vorschlag hinzu...',
+        submit: 'Bewertung abgeben',
+        thankYouTitle: 'Vielen Dank!',
+        thankYouDescription: 'Ihre Bewertung wurde erfolgreich übermittelt.'
     }
   },
   about: {

@@ -28,7 +28,11 @@ export const es = {
     },
     review: {
         title: 'Califica Nuestra Aplicación',
-        description: 'Nos encantaría conocer tu opinión. Déjanos saber cómo lo estamos haciendo dejando una calificación de estrellas.'
+        description: 'Nos encantaría conocer tu opinión. Déjanos saber cómo lo estamos haciendo dejando una calificación de estrellas.',
+        commentPlaceholder: 'Añade un comentario o sugerencia...',
+        submit: 'Enviar Opinión',
+        thankYouTitle: '¡Gracias!',
+        thankYouDescription: 'Tu opinión ha sido enviada con éxito.'
     }
   },
   about: {
@@ -45,7 +49,7 @@ export const es = {
     tip1: { title: 'Lee Siempre la Letra Pequeña', content: 'Nunca firmes un documento sin leerlo detenidamente, incluyendo todo el texto pequeño. Aquí es donde a menudo se encuentran detalles importantes sobre terminación, penalizaciones y responsabilidad.' },
     tip2: { title: 'Entiende los Términos Clave', content: 'Antes de firmar, asegúrate de entender los términos clave del acuerdo. Si ves palabras como \'indemnizar\', \'renuncia\' o \'arbitraje\', asegúrate de saber lo que significan para ti.' },
     tip3: { title: 'Guarda Copias de Todo', content: 'Siempre guarda una copia de cualquier documento legal que firmes. Guárdala en un lugar seguro, tanto digital como físicamente si es posible. Esto es crucial para futuras referencias.' },
-    tip4: { title: 'Los Acuerdos Verbales son Riesgosos', content: 'Aunque algunos acuerdos verbales pueden ser legalmente vinculantes, son muy difíciles de probar. Siempre intenta tener los acuerdos importantes por escrito para evitar futuras disputas.' },
+    tip4: { title: 'Los Acuerdos Verbales son Riesgosos', content: 'Aunque algunos acuerdos verbales pueden ser legalmente vinculantes, son muy difíciles de probar. Siempre intenta tener los acuerdos importantes por escrito para evitar futuras disputes.' },
     tip5: { title: 'No Tengas Miedo de Negociar', content: 'Muchos contratos son negociables. Si no te sientes cómodo con un término, pide que lo cambien. Es mejor negociar desde el principio que lidiar con un mal término más tarde.' },
     tip6: { title: 'En Caso de Duda, Consulta a un Abogado', content: 'Las herramientas de IA como DharmaJyoti son excelentes para un análisis inicial, pero no sustituyen el asesoramiento legal profesional. Para situaciones de alto riesgo, siempre consulta a un abogado calificado.' },
   },
