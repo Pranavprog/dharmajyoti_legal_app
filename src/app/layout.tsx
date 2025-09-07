@@ -10,6 +10,20 @@ import { LanguageProvider } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useTranslations } from '@/hooks/use-translations';
 import { usePathname } from 'next/navigation';
+import { Lora, PT_Sans } from 'next/font/google';
+import { cn } from '@/lib/utils';
+
+const fontSans = PT_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['400', '700'],
+});
+
+const fontLora = Lora({
+  subsets: ['latin'],
+  variable: '--font-lora',
+});
+
 
 function AppLayout({
   children,
@@ -58,11 +72,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <title>DharmaJyoti - Your AI-powered legal assistant.</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
+      <body className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+          fontLora.variable
+        )}>
         <LanguageProvider>
           <AppLayout>{children}</AppLayout>
         </LanguageProvider>
