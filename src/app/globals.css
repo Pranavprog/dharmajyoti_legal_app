@@ -89,47 +89,6 @@
 }
 
 @layer utilities {
-  .neon-glow {
-    position: relative;
-    overflow: hidden;
-  }
-  .neon-glow::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200%;
-    height: 100%;
-    background: conic-gradient(
-      from 180deg at 50% 50%,
-      #ff0000,
-      #ff7f00,
-      #ffff00,
-      #00ff00,
-      #0000ff,
-      #4b0082,
-      #8b00ff,
-      #ff0000
-    );
-    animation: rotate-glow 4s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-  }
-  .group:hover .neon-glow::before {
-    opacity: 1;
-  }
-  .neon-glow > * {
-    position: relative;
-    z-index: 1;
-  }
-  .neon-glow .card-content-inner {
-    background-color: hsl(var(--card));
-    border-radius: calc(var(--radius) - 2px);
-    margin: 2px;
-    height: calc(100% - 4px);
-    width: calc(100% - 4px);
-  }
-
   .glitter-button {
     position: relative;
     overflow: hidden;
