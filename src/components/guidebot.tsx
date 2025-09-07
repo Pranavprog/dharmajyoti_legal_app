@@ -17,39 +17,41 @@ export function Guidebot() {
       id: 'upload',
       title: t.home.features.upload.title,
       icon: <Scale className="h-5 w-5 mr-3 text-primary" />,
-      content: t.guidebot.upload,
+      content: <p>{t.guidebot.upload}</p>,
     },
     {
       id: 'lawyer',
       title: t.home.features.lawyer.title,
       icon: <Bot className="h-5 w-5 mr-3 text-primary" />,
-      content: t.guidebot.lawyer,
+      content: <p>{t.guidebot.lawyer}</p>,
     },
     {
       id: 'future',
       title: t.home.features.future.title,
       icon: <Search className="h-5 w-5 mr-3 text-primary" />,
-      content: t.guidebot.future,
+      content: <p>{t.guidebot.future}</p>,
     },
     {
       id: 'trap',
       title: t.home.features.trap.title,
       icon: <ShieldCheck className="h-5 w-5 mr-3 text-primary" />,
-      content: t.guidebot.trap,
+      content: <p>{t.guidebot.trap}</p>,
     },
     {
         id: 'faq',
         title: t.guidebot.faq.title,
         icon: <HelpCircle className="h-5 w-5 mr-3 text-primary" />,
         content: (
-            <div className="space-y-4">
-                {t.guidebot.faq.questions.map((faq, index) => (
-                    <div key={index}>
-                        <h4 className="font-semibold">{faq.question}</h4>
-                        <p className="whitespace-pre-line text-sm text-foreground/70">{faq.answer}</p>
-                    </div>
-                ))}
-            </div>
+            <Accordion type="single" collapsible className="w-full">
+              {t.guidebot.faq.questions.map((faq, index) => (
+                <AccordionItem key={index} value={`faq-${index}`}>
+                  <AccordionTrigger className="text-sm text-left">{faq.question}</AccordionTrigger>
+                  <AccordionContent className="whitespace-pre-line text-sm text-foreground/70">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
         )
     }
   ];
