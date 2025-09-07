@@ -82,7 +82,7 @@ export default function Home() {
 function FeatureCard({ title, description, href, icon }: {title: string, description: string, href: string, icon: React.ReactNode}) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg transition-transform duration-300 group-hover:scale-105">
+      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
         <div className="flex flex-col items-center justify-center text-center p-6 h-full">
             <div className="mb-4 text-primary">{icon}</div>
             <CardTitle className="text-xl font-bold">{title}</CardTitle>
