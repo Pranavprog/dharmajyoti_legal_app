@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +20,30 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [audioData, setAudioData] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const textToRead = analysis ? `
+    ${t.analysis.docType}: ${analysis.documentType}.
+    ${t.analysis.purpose}: ${analysis.purpose}.
+    ${t.analysis.summary}: ${analysis.summary}.
+    ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
+  ` : '';
+
+  useEffect(() => {
+    const generateAudio = async () => {
+        if (!analysis) return;
+        setIsGeneratingAudio(true);
+        try {
+            const response = await textToSpeech(textToRead);
+            setAudioData(response.media);
+        } catch (error) {
+            console.error('Error pre-generating audio:', error);
+        } finally {
+            setIsGeneratingAudio(false);
+        }
+    };
+    generateAudio();
+  }, [analysis, textToRead]);
+
 
   if (isLoading) {
     return (
@@ -57,42 +81,24 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
     );
   }
   
-  const handlePlayAudio = async (text: string) => {
-    if (audioData) {
-        if (audioRef.current) {
-            audioRef.current.play();
-        }
+  const handlePlayAudio = async () => {
+    if (audioRef.current && audioRef.current.src === audioData) {
+        audioRef.current.play();
         return;
     }
     
-    setIsGeneratingAudio(true);
-    try {
-      const response = await textToSpeech(text);
-      const newAudioData = response.media;
-      setAudioData(newAudioData);
-
-      const audio = new Audio(newAudioData);
-      audioRef.current = audio;
-      audio.play();
-
-    } catch (error) {
-      console.error('Error generating audio:', error);
-      toast({
-        variant: 'destructive',
-        title: t.toast.audioFailed,
-        description: t.toast.audioError,
-      });
-    } finally {
-      setIsGeneratingAudio(false);
+    if (audioData) {
+        const audio = new Audio(audioData);
+        audioRef.current = audio;
+        audio.play();
+    } else if (!isGeneratingAudio) {
+        toast({
+            variant: 'destructive',
+            title: t.toast.audioFailed,
+            description: t.toast.audioError,
+        });
     }
   };
-
-  const textToRead = `
-    ${t.analysis.docType}: ${analysis.documentType}.
-    ${t.analysis.purpose}: ${analysis.purpose}.
-    ${t.analysis.summary}: ${analysis.summary}.
-    ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
-  `;
 
   return (
     <Card className="shadow-lg">
@@ -105,11 +111,11 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => handlePlayAudio(textToRead)}
-            disabled={isGeneratingAudio}
+            onClick={handlePlayAudio}
+            disabled={isGeneratingAudio && !audioData}
             aria-label={t.common.listen}
           >
-            {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
+            {isGeneratingAudio && !audioData ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
           </Button>
         </div>
       </CardHeader>

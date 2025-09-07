@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FileUploader } from '@/components/file-uploader';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -140,38 +140,42 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
     const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
     const [audioData, setAudioData] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const textToRead = `${title}. ${items.join('. ')}`;
 
-    const handlePlayAudio = async (text: string) => {
-        if (audioData) {
-            if (audioRef.current) {
-                audioRef.current.play();
+    useEffect(() => {
+        const generateAudio = async () => {
+            if (!items || items.length === 0) return;
+            setIsGeneratingAudio(true);
+            try {
+                const response = await textToSpeech(textToRead);
+                setAudioData(response.media);
+            } catch (error) {
+                console.error('Error pre-generating audio:', error);
+            } finally {
+                setIsGeneratingAudio(false);
             }
+        };
+        generateAudio();
+    }, [items, textToRead]);
+
+    const handlePlayAudio = async () => {
+        if (audioRef.current && audioRef.current.src === audioData) {
+            audioRef.current.play();
             return;
         }
 
-        setIsGeneratingAudio(true);
-        try {
-            const response = await textToSpeech(text);
-            const newAudioData = response.media;
-            setAudioData(newAudioData);
-
-            const audio = new Audio(newAudioData);
+        if (audioData) {
+            const audio = new Audio(audioData);
             audioRef.current = audio;
             audio.play();
-
-        } catch (error) {
-            console.error('Error generating audio:', error);
-            toast({
+        } else if (!isGeneratingAudio) {
+             toast({
                 variant: 'destructive',
                 title: t.toast.audioFailed,
                 description: t.toast.audioError,
             });
-        } finally {
-            setIsGeneratingAudio(false);
         }
     };
-
-    const textToRead = `${title}. ${items.join('. ')}`;
 
     return (
         <Card className="shadow-lg">
@@ -184,11 +188,11 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
                      <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handlePlayAudio(textToRead)}
-                        disabled={isGeneratingAudio}
+                        onClick={handlePlayAudio}
+                        disabled={isGeneratingAudio && !audioData}
                         aria-label={t.common.listen}
                     >
-                        {isGeneratingAudio ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
+                        {isGeneratingAudio && !audioData ? <Loader className="h-5 w-5 animate-spin" /> : <Volume2 className="h-5 w-5" />}
                     </Button>
                 </CardTitle>
             </CardHeader>
