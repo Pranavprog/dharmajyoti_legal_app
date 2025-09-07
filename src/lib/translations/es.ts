@@ -142,6 +142,51 @@ export const es = {
     upload: 'Ve a "Empezar" en la barra de navegación. Puedes subir un archivo de texto o PDF, o usar tu cámara para tomar una foto de tu documento. Nuestra IA lo analizará y proporcionará un resumen, identificará su propósito y te permitirá chatear sobre el contenido.',
     lawyer: 'Visita la página "Mini Abogado" desde el menú principal. Pega cualquier cláusula legal o describe una situación, asegurándote de incluir tu ubicación (ciudad/estado/país). La IA te dará un análisis rápido y sencillo basado en las leyes locales pertinentes.',
     future: 'Navega a la página "Ver el Futuro". Sube tu documento legal y nuestra IA generará dos historias cortas: una que describe el mejor resultado posible y otra para el peor de los casos, junto con consejos prácticos.',
-    trap: 'Ve a la página "Detectar Trampas". Sube tu documento y la IA lo escaneará cuidadosamente para identificar posibles lagunas, cláusulas problemáticas y otros riesgos ocultos de los que deberías estar al tanto.'
+    trap: 'Ve a la página "Detectar Trampas". Sube tu documento y la IA lo escaneará cuidadosamente para identificar posibles lagunas, cláusulas problemáticas y otros riesgos ocultos de los que deberías estar al tanto.',
+    faq: {
+      title: 'Preguntas Frecuentes',
+      questions: [
+        {
+          question: '¿Qué es un contrato?',
+          answer: 'Un contrato es un acuerdo escrito o hablado que es legalmente vinculante entre dos o más personas/partes.',
+        },
+        {
+          question: '¿Qué hace que un contrato sea válido?',
+          answer: 'Un contrato válido generalmente necesita:\n\nUna oferta\n\nAceptación\n\nConsideración (algo de valor intercambiado)\n\nCapacidad legal (las partes deben ser capaces)\n\nPropósito legal',
+        },
+        {
+          question: '¿Cuáles son mis derechos si me arrestan?',
+          answer: 'Generalmente tienes derecho a permanecer en silencio, derecho a un abogado y derecho a ser informado de los cargos.',
+        },
+        {
+          question: '¿Cuál es la diferencia entre el derecho civil y el derecho penal?',
+          answer: 'El derecho civil se ocupa de las disputas entre personas (como propiedad, contratos, asuntos familiares).\n\nEl derecho penal se ocupa de las acciones consideradas delitos contra la sociedad o el estado (como robo, asalto).',
+        },
+        {
+          question: '¿Qué es la fianza?',
+          answer: 'La fianza es dinero o propiedad que se entrega al tribunal para asegurar que una persona regrese a su juicio después de ser liberada de la cárcel.',
+        },
+        {
+          question: '¿Cuál es la mayoría de edad?',
+          answer: 'La mayoría de edad es cuando una persona es legalmente considerada un adulto (en muchos lugares, es a los 18 años).',
+        },
+        {
+          question: '¿Qué es un testamento?',
+          answer: 'Un testamento es un documento legal que explica cómo se deben dividir los bienes y activos de una persona después de su muerte.',
+        },
+        {
+          question: '¿Cuál es la diferencia entre un abogado y un defensor?',
+          answer: 'Ambos son profesionales del derecho. En muchos países, "abogado" es un término general, mientras que "defensor" se refiere a alguien calificado para representar a clientes en los tribunales.',
+        },
+        {
+          question: '¿Qué es la propiedad intelectual (PI)?',
+          answer: 'La propiedad intelectual se refiere a creaciones de la mente como invenciones, música, libros, nombres de marca y logotipos. Está protegida por leyes como los derechos de autor, las marcas registradas y las patentes.',
+        },
+        {
+          question: '¿Qué debo hacer si necesito ayuda legal?',
+          answer: 'Lo mejor es contactar a un abogado calificado que se especialice en el área del derecho relacionada con tu problema.',
+        },
+      ],
+    }
   }
 };

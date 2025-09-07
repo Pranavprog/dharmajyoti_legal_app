@@ -142,6 +142,51 @@ export const de = {
     upload: 'Gehen Sie in der Navigationsleiste auf "Loslegen". Sie können entweder eine Text- oder PDF-Datei hochladen oder Ihre Kamera verwenden, um ein Bild Ihres Dokuments aufzunehmen. Unsere KI analysiert es, stellt eine Zusammenfassung bereit, identifiziert den Zweck und lässt Sie über den Inhalt chatten.',
     lawyer: 'Besuchen Sie die Seite "Mini-Anwalt" im Hauptmenü. Fügen Sie eine beliebige Rechtsklausel ein oder beschreiben Sie eine Situation und geben Sie unbedingt Ihren Standort (Stadt/Bundesland/Land) an. Die KI gibt Ihnen eine schnelle, einfache Analyse basierend auf den relevanten lokalen Gesetzen.',
     future: 'Navigieren Sie zur Seite "Zukunft sehen". Laden Sie Ihr juristisches Dokument hoch, und unsere KI generiert zwei Kurzgeschichten: eine, die das bestmögliche Ergebnis beschreibt, und eine für das schlimmste Szenario, zusammen mit umsetzbaren Ratschlägen.',
-    trap: 'Gehen Sie zur Seite "Fallen erkennen". Laden Sie Ihr Dokument hoch, und die KI scannt es sorgfältig, um potenzielle Schlupflöcher, problematische Klauseln und andere versteckte Risiken zu identifizieren, auf die Sie achten sollten.'
+    trap: 'Gehen Sie zur Seite "Fallen erkennen". Laden Sie Ihr Dokument hoch, und die KI scannt es sorgfältig, um potenzielle Schlupflöcher, problematische Klauseln und andere versteckte Risiken zu identifizieren, auf die Sie achten sollten.',
+    faq: {
+      title: 'Häufig gestellte Fragen',
+      questions: [
+        {
+          question: 'Was ist ein Vertrag?',
+          answer: 'Ein Vertrag ist eine schriftliche oder mündliche Vereinbarung, die zwischen zwei oder mehr Personen/Parteien rechtsverbindlich ist.',
+        },
+        {
+          question: 'Was macht einen Vertrag gültig?',
+          answer: 'Ein gültiger Vertrag benötigt normalerweise:\n\nEin Angebot\n\nAnnahme\n\nGegenleistung (etwas von Wert wird ausgetauscht)\n\nRechtsfähigkeit (die Parteien müssen fähig sein)\n\nRechtszweck',
+        },
+        {
+          question: 'Welche Rechte habe ich, wenn ich verhaftet werde?',
+          answer: 'Sie haben in der Regel das Recht zu schweigen, das Recht auf einen Anwalt und das Recht, über die Anklage informiert zu werden.',
+        },
+        {
+          question: 'Was ist der Unterschied zwischen Zivilrecht und Strafrecht?',
+          answer: 'Das Zivilrecht befasst sich mit Streitigkeiten zwischen Personen (wie Eigentum, Verträge, Familienangelegenheiten).\n\nDas Strafrecht befasst sich mit Handlungen, die als Straftaten gegen die Gesellschaft oder den Staat gelten (wie Diebstahl, Körperverletzung).',
+        },
+        {
+          question: 'Was ist eine Kaution?',
+          answer: 'Eine Kaution ist Geld oder Eigentum, das dem Gericht gegeben wird, um sicherzustellen, dass eine Person nach ihrer Freilassung aus dem Gefängnis zu ihrem Prozess zurückkehrt.',
+        },
+        {
+          question: 'Was ist das Mündigkeitsalter?',
+          answer: 'Das Mündigkeitsalter ist das Alter, in dem eine Person rechtlich als Erwachsener gilt (in vielen Ländern ist es 18 Jahre).',
+        },
+        {
+          question: 'Was ist ein Testament?',
+          answer: 'Ein Testament ist ein juristisches Dokument, das erklärt, wie das Eigentum und die Vermögenswerte einer Person nach ihrem Tod aufgeteilt werden sollen.',
+        },
+        {
+          question: 'Was ist der Unterschied zwischen einem Anwalt und einem Advokaten?',
+          answer: 'Beide sind Juristen. In vielen Ländern ist "Anwalt" ein allgemeiner Begriff, während "Advokat" sich auf jemanden bezieht, der qualifiziert ist, Mandanten vor Gericht zu vertreten.',
+        },
+        {
+          question: 'Was ist geistiges Eigentum (IP)?',
+          answer: 'Geistiges Eigentum bezieht sich auf Schöpfungen des Geistes wie Erfindungen, Musik, Bücher, Markennamen und Logos. Es wird durch Gesetze wie Urheberrecht, Markenrecht und Patente geschützt.',
+        },
+        {
+          question: 'Was soll ich tun, wenn ich rechtliche Hilfe benötige?',
+          answer: 'Am besten wenden Sie sich an einen qualifizierten Anwalt, der auf das Rechtsgebiet spezialisiert ist, das Ihr Problem betrifft.',
+        },
+      ],
+    }
   }
 };

@@ -142,6 +142,51 @@ export const en = {
     upload: 'Go to "Get Started" from the navigation bar. You can either upload a text or PDF file, or use your camera to take a picture of your document. Our AI will analyze it and provide a summary, identify its purpose, and let you chat about the contents.',
     lawyer: 'Visit the "Mini Lawyer" page from the main menu. Paste any legal clause or describe a situation, making sure to include your location (city/state/country). The AI will give you a quick, simple analysis based on relevant local laws.',
     future: 'Navigate to the "See Future" page. Upload your legal document, and our AI will generate two short stories: one describing the best-case outcome and one for the worst-case scenario, along with actionable advice.',
-    trap: 'Go to the "Spot Trap" page. Upload your document, and the AI will carefully scan it to identify potential loopholes, problematic clauses, and other hidden risks you should be aware of.'
+    trap: 'Go to the "Spot Trap" page. Upload your document, and the AI will carefully scan it to identify potential loopholes, problematic clauses, and other hidden risks you should be aware of.',
+    faq: {
+      title: 'Frequently Asked Questions',
+      questions: [
+        {
+          question: 'What is a contract?',
+          answer: 'A contract is a written or spoken agreement that is legally binding between two or more people/parties.',
+        },
+        {
+          question: 'What makes a contract valid?',
+          answer: 'A valid contract usually needs:\n\nAn offer\n\nAcceptance\n\nConsideration (something of value exchanged)\n\nLegal capacity (parties must be capable)\n\nLegal purpose',
+        },
+        {
+          question: 'What are my rights if I’m arrested?',
+          answer: 'You usually have the right to remain silent, the right to a lawyer, and the right to be informed of the charges.',
+        },
+        {
+          question: 'What is the difference between civil law and criminal law?',
+          answer: 'Civil law deals with disputes between people (like property, contracts, family issues).\n\nCriminal law deals with actions considered offenses against society or the state (like theft, assault).',
+        },
+        {
+          question: 'What is bail?',
+          answer: 'Bail is money or property given to the court to make sure a person returns for their trial after being released from jail.',
+        },
+        {
+          question: 'What is the age of majority?',
+          answer: 'The age of majority is when a person is legally considered an adult (in many places, it’s 18 years old).',
+        },
+        {
+          question: 'What is a will?',
+          answer: 'A will is a legal document that explains how a person’s property and assets should be divided after their death.',
+        },
+        {
+          question: 'What is the difference between a lawyer and an advocate?',
+          answer: 'Both are legal professionals. In many countries, "lawyer" is a general term, while "advocate" refers to someone qualified to represent clients in court.',
+        },
+        {
+          question: 'What is intellectual property (IP)?',
+          answer: 'Intellectual property refers to creations of the mind like inventions, music, books, brand names, and logos. It’s protected by laws such as copyright, trademark, and patents.',
+        },
+        {
+          question: 'What should I do if I need legal help?',
+          answer: 'It’s best to contact a qualified lawyer who specializes in the area of law related to your problem.',
+        },
+      ],
+    }
   }
 };

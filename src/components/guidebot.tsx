@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MessageSquareQuote, Bot, Search, Scale, ShieldCheck } from 'lucide-react';
+import { MessageSquareQuote, Bot, Search, Scale, ShieldCheck, HelpCircle } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
 
 export function Guidebot() {
@@ -37,6 +37,21 @@ export function Guidebot() {
       icon: <ShieldCheck className="h-5 w-5 mr-3 text-primary" />,
       content: t.guidebot.trap,
     },
+    {
+        id: 'faq',
+        title: t.guidebot.faq.title,
+        icon: <HelpCircle className="h-5 w-5 mr-3 text-primary" />,
+        content: (
+            <div className="space-y-4">
+                {t.guidebot.faq.questions.map((faq, index) => (
+                    <div key={index}>
+                        <h4 className="font-semibold">{faq.question}</h4>
+                        <p className="whitespace-pre-line text-sm text-foreground/70">{faq.answer}</p>
+                    </div>
+                ))}
+            </div>
+        )
+    }
   ];
 
   return (

@@ -142,6 +142,51 @@ export const fr = {
     upload: 'Allez dans "Commencer" depuis la barre de navigation. Vous pouvez soit télécharger un fichier texte ou PDF, soit utiliser votre appareil photo pour prendre une photo de votre document. Notre IA l\'analysera et fournira un résumé, identifiera son objectif et vous permettra de discuter du contenu.',
     lawyer: 'Visitez la page "Mini Juriste" depuis le menu principal. Collez n\'importe quelle clause juridique ou décrivez une situation, en veillant à inclure votre emplacement (ville/état/pays). L\'IA vous donnera une analyse rapide et simple basée sur les lois locales pertinentes.',
     future: 'Naviguez vers la page "Voir le Futur". Téléchargez votre document juridique, et notre IA générera deux courtes histoires : une décrivant le meilleur résultat possible et une pour le pire des cas, ainsi que des conseils pratiques.',
-    trap: 'Allez à la page "Détecter les Pièges". Téléchargez votre document, et l\'IA l\'analysera attentivement pour identifier les failles potentielles, les clauses problématiques et autres risques cachés dont vous devriez être conscient.'
+    trap: 'Allez à la page "Détecter les Pièges". Téléchargez votre document, et l\'IA l\'analysera attentivement pour identifier les failles potentielles, les clauses problématiques et autres risques cachés dont vous devriez être conscient.',
+    faq: {
+      title: 'Foire Aux Questions',
+      questions: [
+        {
+          question: 'Qu\'est-ce qu\'un contrat ?',
+          answer: 'Un contrat est un accord écrit ou oral qui est juridiquement contraignant entre deux ou plusieurs personnes/parties.',
+        },
+        {
+          question: 'Qu\'est-ce qui rend un contrat valide ?',
+          answer: 'Un contrat valide nécessite généralement :\n\nUne offre\n\nUne acceptation\n\nUne contrepartie (quelque chose de valeur échangé)\n\nLa capacité juridique (les parties doivent être capables)\n\nUn but légal',
+        },
+        {
+          question: 'Quels sont mes droits si je suis arrêté(e) ?',
+          answer: 'Vous avez généralement le droit de garder le silence, le droit à un avocat et le droit d\'être informé(e) des charges retenues contre vous.',
+        },
+        {
+          question: 'Quelle est la différence entre le droit civil et le droit pénal ?',
+          answer: 'Le droit civil traite des litiges entre personnes (comme la propriété, les contrats, les questions familiales).\n\nLe droit pénal traite des actions considérées comme des infractions contre la société ou l\'État (comme le vol, l\'agression).',
+        },
+        {
+          question: 'Qu\'est-ce qu\'une caution ?',
+          answer: 'La caution est une somme d\'argent ou un bien remis au tribunal pour s\'assurer qu\'une personne retourne à son procès après avoir été libérée de prison.',
+        },
+        {
+          question: 'Quel est l\'âge de la majorité ?',
+          answer: 'L\'âge de la majorité est l\'âge auquel une personne est légalement considérée comme un adulte (dans de nombreux endroits, c\'est 18 ans).',
+        },
+        {
+          question: 'Qu\'est-ce qu\'un testament ?',
+          answer: 'Un testament est un document juridique qui explique comment les biens et les actifs d\'une personne doivent être répartis après sa mort.',
+        },
+        {
+          question: 'Quelle est la différence entre un juriste et un avocat ?',
+          answer: 'Les deux sont des professionnels du droit. Dans de nombreux pays, "juriste" est un terme général, tandis qu\'"avocat" désigne une personne qualifiée pour représenter des clients devant les tribunaux.',
+        },
+        {
+          question: 'Qu\'est-ce que la propriété intellectuelle (PI) ?',
+          answer: 'La propriété intellectuelle désigne les créations de l\'esprit comme les inventions, la musique, les livres, les noms de marque et les logos. Elle est protégée par des lois telles que le droit d\'auteur, le droit des marques et les brevets.',
+        },
+        {
+          question: 'Que dois-je faire si j\'ai besoin d\'une aide juridique ?',
+          answer: 'Il est préférable de contacter un avocat qualifié spécialisé dans le domaine du droit lié à votre problème.',
+        },
+      ],
+    }
   }
 };
