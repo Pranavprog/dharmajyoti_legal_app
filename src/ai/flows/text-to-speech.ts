@@ -11,6 +11,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import wav from 'wav';
 
 const TextToSpeechInputSchema = z.string();
 export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
@@ -26,34 +27,32 @@ export async function textToSpeech(
   return textToSpeechFlow(input);
 }
 
-function toWav(
+async function toWav(
   pcmData: Buffer,
   channels = 1,
   rate = 24000,
   sampleWidth = 2
-): string {
-  const dataLength = pcmData.length;
-  const buffer = Buffer.alloc(44 + dataLength);
-  
-  buffer.write('RIFF', 0);
-  buffer.writeUInt32LE(36 + dataLength, 4);
-  buffer.write('WAVE', 8);
-  buffer.write('fmt ', 12);
-  buffer.writeUInt32LE(16, 16); // Sub-chunk 1 size
-  buffer.writeUInt16LE(1, 20); // Audio format (1 for PCM)
-  buffer.writeUInt16LE(channels, 22);
-  buffer.writeUInt32LE(rate, 24);
-  buffer.writeUInt32LE(rate * channels * sampleWidth, 28); // Byte rate
-  buffer.writeUInt16LE(channels * sampleWidth, 32); // Block align
-  buffer.writeUInt16LE(sampleWidth * 8, 34); // Bits per sample
-  buffer.write('data', 36);
-  buffer.writeUInt32LE(dataLength, 40);
-  
-  pcmData.copy(buffer, 44);
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const writer = new wav.Writer({
+      channels,
+      sampleRate: rate,
+      bitDepth: sampleWidth * 8,
+    });
 
-  return buffer.toString('base64');
+    let bufs = [] as any[];
+    writer.on('error', reject);
+    writer.on('data', function (d) {
+      bufs.push(d);
+    });
+    writer.on('end', function () {
+      resolve(Buffer.concat(bufs).toString('base64'));
+    });
+
+    writer.write(pcmData);
+    writer.end();
+  });
 }
-
 
 const textToSpeechFlow = ai.defineFlow(
   {
@@ -81,7 +80,7 @@ const textToSpeechFlow = ai.defineFlow(
       media.url.substring(media.url.indexOf(',') + 1),
       'base64'
     );
-    const wavBase64 = toWav(audioBuffer);
+    const wavBase64 = await toWav(audioBuffer);
     return {
       media: 'data:audio/wav;base64,' + wavBase64,
     };
