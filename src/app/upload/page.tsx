@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -15,7 +16,7 @@ import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance'
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { BotMessageSquare, Camera, Upload } from 'lucide-react';
+import { BotMessageSquare, Camera, Upload, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
 import { useLanguage } from '@/context/language-context';
@@ -220,16 +221,16 @@ export default function UploadPage() {
   };
 
   const renderInitialView = () => (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-lg">
-        <CardHeader className="text-center">
+        <CardHeader className="text-center p-8">
           <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
             <BotMessageSquare className="h-8 w-8 text-primary" />
           </div>
           <CardTitle className="text-3xl">{t.upload.title}</CardTitle>
           <CardDescription>{t.upload.description}</CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col sm:flex-row gap-4 justify-center p-6">
+        <CardContent className="flex flex-col sm:flex-row gap-4 justify-center p-8 pt-0">
           <Button onClick={() => setView('camera')} size="lg" variant="outline">
             <Camera className="mr-2 h-5 w-5" />
             {t.upload.useCamera}
@@ -244,15 +245,15 @@ export default function UploadPage() {
   );
 
   const renderCameraView = () => (
-     <div className="flex h-full items-center justify-center">
+     <div className="flex h-full items-center justify-center p-4">
         <Card className="w-full max-w-2xl shadow-lg">
-            <CardHeader>
+            <CardHeader className="p-8">
                 <CardTitle>{t.upload.cameraTitle}</CardTitle>
                 <CardDescription>{t.upload.cameraDescription}</CardDescription>
             </CardHeader>
-            <CardContent>
-                <div className="relative">
-                    <video ref={videoRef} className="w-full aspect-video rounded-md" autoPlay muted playsInline />
+            <CardContent className="p-8 pt-0">
+                <div className="relative aspect-video bg-muted rounded-md overflow-hidden">
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
                     <canvas ref={canvasRef} className="hidden" />
                     {hasCameraPermission === false && (
                          <Alert variant="destructive" className="mt-4">
@@ -261,10 +262,15 @@ export default function UploadPage() {
                         </Alert>
                     )}
                 </div>
-                 <div className="mt-4 flex justify-between">
+                 <div className="mt-6 flex justify-between">
                     <Button variant="outline" onClick={() => setView('options')}>{t.common.back}</Button>
                     <Button onClick={handleCapture} disabled={isAnalyzing || hasCameraPermission !== true}>
-                        {isAnalyzing ? t.common.analyzing : t.upload.capture}
+                        {isAnalyzing ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            {t.common.analyzing}
+                          </>
+                        ) : t.upload.capture}
                     </Button>
                 </div>
             </CardContent>
@@ -273,15 +279,15 @@ export default function UploadPage() {
   );
 
   const renderUploadView = () => (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex h-full items-center justify-center p-4">
         <Card className="w-full max-w-2xl shadow-lg">
-            <CardHeader className="text-center">
+            <CardHeader className="text-center p-8">
                 <CardTitle className="text-3xl">{t.upload.uploadTitle}</CardTitle>
                 <CardDescription>{t.upload.uploadDescription}</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-8 pt-0">
                 <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
-                 <div className="mt-4 flex justify-start">
+                 <div className="mt-6 flex justify-start">
                     <Button variant="outline" onClick={() => setView('options')}>{t.common.back}</Button>
                 </div>
             </CardContent>
@@ -292,12 +298,12 @@ export default function UploadPage() {
   const renderMainView = () => {
     if (isAnalyzing) {
         return (
-            <div className="flex h-full items-center justify-center">
+            <div className="flex h-full items-center justify-center p-4">
                 <Card className="w-full max-w-2xl shadow-lg text-center">
-                    <CardHeader>
-                        <CardTitle>{t.common.analyzingDocument}</CardTitle>
+                    <CardHeader className="p-8">
+                        <CardTitle className="text-2xl">{t.common.analyzingDocument}</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-8 pt-0">
                         <p>{t.common.pleaseWait}</p>
                         <div className="mt-4 h-2 bg-primary/20 rounded-full overflow-hidden">
                             <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
@@ -319,8 +325,8 @@ export default function UploadPage() {
     }
     
     return (
-      <div className="grid h-full gap-6 md:grid-cols-2">
-        <div className="flex flex-col gap-4 h-full min-h-[400px]">
+      <div className="grid h-full gap-6 md:grid-cols-2 lg:grid-cols-5">
+        <div className="flex flex-col gap-4 h-full min-h-[400px] lg:col-span-3">
           <div className='flex justify-between items-center'>
             <h2 className="text-2xl font-semibold">{t.common.documentViewer}</h2>
             <Button variant="outline" onClick={() => {
@@ -331,7 +337,7 @@ export default function UploadPage() {
           </div>
           <DocumentViewer content={document.content} />
         </div>
-        <div className="flex flex-col gap-4 h-full min-h-[400px]">
+        <div className="flex flex-col gap-4 h-full min-h-[400px] lg:col-span-2">
           <Tabs defaultValue="analysis" className="flex flex-col h-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="analysis">{t.common.analysis}</TabsTrigger>
@@ -359,7 +365,7 @@ export default function UploadPage() {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] w-full">
-      <main className="flex flex-1 flex-col gap-4 overflow-auto bg-background p-4 sm:p-6">
+      <main className="flex flex-1 flex-col gap-4 overflow-auto bg-background p-4 sm:p-6 md:p-8">
           {renderMainView()}
       </main>
     </div>

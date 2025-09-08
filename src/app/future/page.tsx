@@ -55,14 +55,14 @@ export default function FuturePage() {
     const renderInitialView = () => (
         <div className="w-full max-w-2xl">
             <Card className="shadow-xl">
-                <CardHeader className="text-center">
+                <CardHeader className="text-center p-8">
                     <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
                         <Search className="h-8 w-8 text-primary" />
                     </div>
                     <CardTitle className="text-3xl">{t.future.title}</CardTitle>
                     <CardDescription>{t.future.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-8 pt-0">
                     <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
                 </CardContent>
             </Card>
@@ -72,11 +72,11 @@ export default function FuturePage() {
     const renderLoadingView = () => (
         <div className="w-full max-w-2xl">
             <Card className="shadow-xl text-center">
-                <CardHeader>
+                <CardHeader className="p-8">
                     <CardTitle className="text-2xl">{t.future.loadingTitle}</CardTitle>
                     <CardDescription>{t.future.loadingDescription}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-8 pt-0">
                     <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
                         <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
                     </div>
@@ -136,7 +136,7 @@ export default function FuturePage() {
     }
 
     return (
-        <main className="container mx-auto px-4 py-12 md:py-20 flex justify-center">
+        <main className="container mx-auto px-4 py-12 md:py-20 lg:py-24 flex justify-center">
             {renderContent()}
         </main>
     );

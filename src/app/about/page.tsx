@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,9 +9,9 @@ export default function AboutPage() {
     const t = useTranslations();
 
     return (
-        <main className="container mx-auto px-4 py-12 md:py-20">
+        <main className="container mx-auto px-4 py-12 md:py-20 lg:py-24">
             <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-12">
+                <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary mb-4">{t.about.title}</h1>
                     <p className="text-lg md:text-xl text-foreground/80">
                         {t.about.subtitle}
@@ -26,7 +27,7 @@ export default function AboutPage() {
                         </div>
                         <CardTitle className="text-center text-3xl">{t.about.missionTitle}</CardTitle>
                     </CardHeader>
-                    <CardContent className="text-lg text-foreground/90 space-y-6 text-center leading-relaxed">
+                    <CardContent className="text-lg text-foreground/90 space-y-6 text-center leading-relaxed max-w-3xl mx-auto">
                         <p>
                             {t.about.missionP1}
                         </p>

@@ -44,21 +44,21 @@ export default function Home() {
 
   return (
     <main className="flex-1">
-      <section className="relative w-full py-20 md:py-32 lg:py-40 overflow-hidden">
+      <section className="relative w-full py-24 md:py-32 lg:py-48 overflow-hidden">
         <div className="absolute top-0 left-0 -z-10 h-full w-full bg-background bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,hsl(var(--primary)/0.3),rgba(255,255,255,0))]"></div>
         <div className="container px-4 md:px-6 text-center">
             <div className="max-w-3xl mx-auto">
-                <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl text-primary">
+                <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-primary">
                     DharmaJyoti
                 </h1>
-                <p className="mt-4 text-lg text-foreground/80 md:text-xl">
+                <p className="mt-6 text-lg text-foreground/80 md:text-xl">
                     {t.home.tagline}
                 </p>
             </div>
         </div>
       </section>
 
-      <section className="container px-4 md:px-6 pb-20">
+      <section className="container px-4 md:px-6 pb-24 md:pb-32 lg:pb-40">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
             <FeatureCard key={feature.title} {...feature} />
@@ -66,9 +66,9 @@ export default function Home() {
         </div>
       </section>
       
-       <section className="container px-4 md:px-6 pb-20 text-center">
+       <section className="container px-4 md:px-6 pb-24 md:pb-32 lg:pb-40 text-center">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">{t.home.review.title}</h2>
-        <p className="mx-auto max-w-[600px] text-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+        <p className="mx-auto max-w-[700px] text-foreground/80 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
           {t.home.review.description}
         </p>
         <StarRating />
@@ -82,14 +82,14 @@ export default function Home() {
 function FeatureCard({ title, description, href, icon }: {title: string, description: string, href: string, icon: React.ReactNode}) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
-        <div className="flex flex-col items-center justify-center text-center p-6 h-full">
+      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+        <CardContent className="flex flex-col items-center justify-center text-center p-8 h-full">
             <div className="mb-4 text-primary">{icon}</div>
             <CardTitle className="text-xl font-bold">{title}</CardTitle>
-            <CardContent className="p-0 mt-2 text-sm text-foreground/70">
-              <p>{description}</p>
-            </CardContent>
-        </div>
+            <p className="p-0 mt-2 text-sm text-foreground/70">
+              {description}
+            </p>
+        </CardContent>
       </Card>
     </Link>
   );
@@ -112,8 +112,8 @@ function StarRating() {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="flex justify-center gap-2 mt-8">
+    <div className="max-w-md mx-auto mt-8">
+      <div className="flex justify-center gap-2">
         {[...Array(5)].map((star, index) => {
           const ratingValue = index + 1;
           return (
@@ -142,9 +142,9 @@ function StarRating() {
           placeholder={t.home.review.commentPlaceholder}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          className="bg-card"
+          className="bg-card min-h-[120px]"
         />
-        <Button onClick={handleSubmit} disabled={rating === 0 && comment.trim() === ''}>
+        <Button onClick={handleSubmit} disabled={rating === 0 && comment.trim() === ''} size="lg">
           {t.home.review.submit}
         </Button>
       </div>
