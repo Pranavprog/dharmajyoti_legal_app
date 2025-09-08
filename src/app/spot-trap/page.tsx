@@ -142,24 +142,7 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
     const audioDataRef = useRef<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    useEffect(() => {
-        const generateAudio = async () => {
-            if (!items || items.length === 0) return;
-            setIsGeneratingAudio(true);
-            try {
-                const textToRead = `${title}. ${items.join('. ')}`;
-                const response = await textToSpeech(textToRead);
-                audioDataRef.current = response.media;
-            } catch (error) {
-                console.error('Error pre-generating audio:', error);
-            } finally {
-                setIsGeneratingAudio(false);
-            }
-        };
-        generateAudio();
-    }, [items, title]);
-
-    const handlePlayAudio = () => {
+    const handlePlayAudio = async () => {
         if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
             audioRef.current.play();
             return;
@@ -169,12 +152,28 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
             const audio = new Audio(audioDataRef.current);
             audioRef.current = audio;
             audio.play();
-        } else if (!isGeneratingAudio) {
-             toast({
+            return;
+        }
+
+        if (!items || items.length === 0 || isGeneratingAudio) return;
+
+        setIsGeneratingAudio(true);
+        try {
+            const textToRead = `${title}. ${items.join('. ')}`;
+            const response = await textToSpeech(textToRead);
+            audioDataRef.current = response.media;
+            const audio = new Audio(response.media);
+            audioRef.current = audio;
+            audio.play();
+        } catch (error) {
+            console.error('Error generating audio:', error);
+            toast({
                 variant: 'destructive',
                 title: t.toast.audioFailed,
                 description: t.toast.audioError,
             });
+        } finally {
+            setIsGeneratingAudio(false);
         }
     };
 

@@ -22,29 +22,6 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
   const audioDataRef = useRef<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => {
-    const generateAudio = async () => {
-        if (!analysis) return;
-        setIsGeneratingAudio(true);
-        try {
-            const textToRead = `
-              ${t.analysis.docType}: ${analysis.documentType}.
-              ${t.analysis.purpose}: ${analysis.purpose}.
-              ${t.analysis.summary}: ${analysis.summary}.
-              ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
-            `;
-            const response = await textToSpeech(textToRead);
-            audioDataRef.current = response.media;
-        } catch (error) {
-            console.error('Error pre-generating audio:', error);
-        } finally {
-            setIsGeneratingAudio(false);
-        }
-    };
-    generateAudio();
-  }, [analysis, t]);
-
-
   if (isLoading) {
     return (
       <Card className="shadow-lg">
@@ -81,7 +58,7 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
     );
   }
   
-  const handlePlayAudio = () => {
+  const handlePlayAudio = async () => {
     if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
         audioRef.current.play();
         return;
@@ -91,12 +68,33 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
         const audio = new Audio(audioDataRef.current);
         audioRef.current = audio;
         audio.play();
-    } else if (!isGeneratingAudio) {
+        return;
+    }
+
+    if (!analysis || isGeneratingAudio) return;
+
+    setIsGeneratingAudio(true);
+    try {
+        const textToRead = `
+          ${t.analysis.docType}: ${analysis.documentType}.
+          ${t.analysis.purpose}: ${analysis.purpose}.
+          ${t.analysis.summary}: ${analysis.summary}.
+          ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
+        `;
+        const response = await textToSpeech(textToRead);
+        audioDataRef.current = response.media;
+        const audio = new Audio(response.media);
+        audioRef.current = audio;
+        audio.play();
+    } catch (error) {
+        console.error('Error generating audio:', error);
         toast({
             variant: 'destructive',
             title: t.toast.audioFailed,
             description: t.toast.audioError,
         });
+    } finally {
+        setIsGeneratingAudio(false);
     }
   };
 

@@ -149,24 +149,7 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
     const audioDataRef = useRef<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    useEffect(() => {
-        const generateAudio = async () => {
-            if (!content) return;
-            setIsGeneratingAudio(true);
-            try {
-                const textToRead = `${title}. ${content}`;
-                const response = await textToSpeech(textToRead);
-                audioDataRef.current = response.media;
-            } catch (error) {
-                console.error('Error pre-generating audio:', error);
-            } finally {
-                setIsGeneratingAudio(false);
-            }
-        };
-        generateAudio();
-    }, [content, title]);
-
-    const handlePlayAudio = () => {
+    const handlePlayAudio = async () => {
         if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
             audioRef.current.play();
             return;
@@ -176,12 +159,28 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
             const audio = new Audio(audioDataRef.current);
             audioRef.current = audio;
             audio.play();
-        } else if (!isGeneratingAudio) {
-             toast({
+            return;
+        }
+
+        if (!content || isGeneratingAudio) return;
+
+        setIsGeneratingAudio(true);
+        try {
+            const textToRead = `${title}. ${content}`;
+            const response = await textToSpeech(textToRead);
+            audioDataRef.current = response.media;
+            const audio = new Audio(response.media);
+            audioRef.current = audio;
+            audio.play();
+        } catch (error) {
+            console.error('Error generating audio:', error);
+            toast({
                 variant: 'destructive',
                 title: t.toast.audioFailed,
                 description: t.toast.audioError,
             });
+        } finally {
+            setIsGeneratingAudio(false);
         }
     };
 
