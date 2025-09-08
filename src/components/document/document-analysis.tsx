@@ -59,7 +59,7 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
   }
   
   const handlePlayAudio = async () => {
-    if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
+    if (audioRef.current?.src) {
         audioRef.current.play();
         return;
     }

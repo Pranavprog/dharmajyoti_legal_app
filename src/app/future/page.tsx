@@ -150,7 +150,7 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const handlePlayAudio = async () => {
-        if (audioRef.current && audioDataRef.current && audioRef.current.src === audioDataRef.current) {
+        if (audioRef.current?.src) {
             audioRef.current.play();
             return;
         }
