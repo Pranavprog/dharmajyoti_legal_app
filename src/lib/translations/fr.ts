@@ -116,6 +116,7 @@ export const fr = {
     unsupportedFile: 'Type de Fichier non Pris en Charge',
     unsupportedFileDesc: 'Veuillez télécharger un fichier texte brut (.txt) ou PDF.',
     serviceUnavailable: 'Le service IA est actuellement surchargé. Veuillez réessayer dans quelques instants.',
+    quotaExceeded: 'Vous avez dépassé le quota quotidien pour le service audio. Veuillez réessayer demain.',
   },
   common: {
     document: 'Document',

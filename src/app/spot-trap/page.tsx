@@ -175,8 +175,12 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
         } catch (error) {
             console.error('Error generating audio:', error);
             let description = t.toast.audioError;
-            if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
-                description = t.toast.serviceUnavailable;
+            if (error instanceof Error) {
+                if (error.message.includes('429')) {
+                    description = t.toast.quotaExceeded;
+                } else if (error.message.includes('503') || error.message.includes('overloaded')) {
+                    description = t.toast.serviceUnavailable;
+                }
             }
             toast({
                 variant: 'destructive',

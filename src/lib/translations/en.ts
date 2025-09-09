@@ -116,6 +116,7 @@ export const en = {
     unsupportedFile: 'Unsupported File Type',
     unsupportedFileDesc: 'Please upload a plain text (.txt) or PDF file.',
     serviceUnavailable: 'The AI service is currently overloaded. Please try again in a few moments.',
+    quotaExceeded: 'You have exceeded the daily quota for the audio service. Please try again tomorrow.',
   },
   common: {
     document: 'Document',

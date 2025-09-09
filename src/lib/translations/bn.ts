@@ -105,7 +105,7 @@ export const bn = {
     summary: 'সারাংশ',
     keywords: 'কীওয়ার্ড',
   },
-toast: {
+  toast: {
     analysisFailed: 'বিশ্লেষণ ব্যর্থ হয়েছে',
     analysisError: 'আপনার নথি বিশ্লেষণ করার সময় একটি ত্রুটি ঘটেছে। দয়া করে আবার চেষ্টা করুন।',
     cameraDenied: 'ক্যামেরা অ্যাক্সেস প্রত্যাখ্যান করা হয়েছে',
@@ -115,6 +115,8 @@ toast: {
     audioError: 'Could not generate audio for this section.',
     unsupportedFile: 'অসমর্থিত ফাইলের প্রকার',
     unsupportedFileDesc: 'দয়া করে একটি প্লেইন টেক্সট (.txt) বা PDF ফাইল আপলোড করুন।',
+    serviceUnavailable: 'এআই পরিষেবা বর্তমানে ওভারলোড করা আছে। দয়া করে কয়েক মুহূর্ত পরে আবার চেষ্টা করুন।',
+    quotaExceeded: 'আপনি অডিও পরিষেবার জন্য দৈনিক কোটা অতিক্রম করেছেন। দয়া করে আগামীকাল আবার চেষ্টা করুন।',
   },
   common: {
     document: 'নথি',

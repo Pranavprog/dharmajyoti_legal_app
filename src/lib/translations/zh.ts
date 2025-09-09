@@ -115,6 +115,8 @@ export const zh = {
     audioError: '无法为此部分生成音频。',
     unsupportedFile: '不支持的文件类型',
     unsupportedFileDesc: '请上传纯文本（.txt）或 PDF 文件。',
+    serviceUnavailable: 'AI 服务当前已超载。请稍后重试。',
+    quotaExceeded: '您已超出音频服务的每日配额。请明天再试。',
   },
   common: {
     document: '文件',

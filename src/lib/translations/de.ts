@@ -115,6 +115,8 @@ export const de = {
     audioError: 'Für diesen Abschnitt konnte kein Audio erzeugt werden.',
     unsupportedFile: 'Nicht unterstützter Dateityp',
     unsupportedFileDesc: 'Bitte laden Sie eine einfache Textdatei (.txt) oder eine PDF-Datei hoch.',
+    serviceUnavailable: 'Der KI-Dienst ist derzeit überlastet. Bitte versuchen Sie es in wenigen Augenblicken erneut.',
+    quotaExceeded: 'Sie haben das Tageskontingent für den Audiodienst überschritten. Bitte versuchen Sie es morgen erneut.',
   },
   common: {
     document: 'Dokument',
