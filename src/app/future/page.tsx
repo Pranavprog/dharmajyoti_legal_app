@@ -37,6 +37,7 @@ export default function FuturePage() {
             setProgress(25);
             setDocument({ name: file.name, content: t.future.extracting });
             const { text } = await extractDocumentText({ documentDataUri: dataUri });
+            
             setProgress(50);
             setDocument({ name: file.name, content: text });
             
@@ -180,10 +181,14 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
             audio.play();
         } catch (error) {
             console.error('Error generating audio:', error);
+            let description = t.toast.audioError;
+            if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
+                description = t.toast.serviceUnavailable;
+            }
             toast({
                 variant: 'destructive',
                 title: t.toast.audioFailed,
-                description: t.toast.audioError,
+                description,
             });
         } finally {
             setIsGeneratingAudio(false);

@@ -42,6 +42,7 @@ export default function SpotTrapPage() {
       setDocument({ name: file.name, content: text });
 
       setProgress(75);
+      setDocument(prev => ({...prev, content: t.spotTrap.loadingDescription}));
       const trapResult = await spotTraps({ documentText: text, language });
       setAnalysis(trapResult);
       setProgress(100);
@@ -173,10 +174,14 @@ function ResultSection({ title, items, icon }: { title: string; items: string[];
             audio.play();
         } catch (error) {
             console.error('Error generating audio:', error);
+            let description = t.toast.audioError;
+            if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
+                description = t.toast.serviceUnavailable;
+            }
             toast({
                 variant: 'destructive',
                 title: t.toast.audioFailed,
-                description: t.toast.audioError,
+                description,
             });
         } finally {
             setIsGeneratingAudio(false);
