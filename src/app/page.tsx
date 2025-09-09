@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import SplitText from '@/components/split-text';
 
 export default function Home() {
   const t = useTranslations();
@@ -42,15 +43,30 @@ export default function Home() {
     },
   ];
 
+  const handleAnimationComplete = () => {
+    console.log('All letters have animated!');
+  };
+
   return (
     <main className="flex-1">
       <section className="relative w-full py-24 md:py-32 lg:py-48 overflow-hidden">
         <div className="absolute top-0 left-0 -z-10 h-full w-full bg-background bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,hsl(var(--primary)/0.3),rgba(255,255,255,0))]"></div>
         <div className="container px-4 md:px-6 text-center">
             <div className="max-w-3xl mx-auto">
-                <h1 className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-primary">
-                    DharmaJyoti
-                </h1>
+                <SplitText
+                  text="DHARMAJYOTI!"
+                  className="text-4xl font-headline font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-primary"
+                  delay={100}
+                  duration={0.6}
+                  ease="power3.out"
+                  splitType="chars"
+                  from={{ opacity: 0, y: 40 }}
+                  to={{ opacity: 1, y: 0 }}
+                  threshold={0.1}
+                  rootMargin="-100px"
+                  textAlign="center"
+                  onLetterAnimationComplete={handleAnimationComplete}
+                />
                 <p className="mt-6 text-lg text-foreground/80 md:text-xl">
                     {t.home.tagline}
                 </p>
