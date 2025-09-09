@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/hooks/use-translations";
-import { Bullseye } from "lucide-react";
+import { Target } from "lucide-react";
 import Image from 'next/image';
 
 export default function AboutPage() {
@@ -23,7 +23,7 @@ export default function AboutPage() {
                     <CardHeader>
                         <div className="flex justify-center mb-4">
                             <div className="bg-primary/10 p-4 rounded-full border border-primary/20 w-16 h-16 flex items-center justify-center">
-                                <Bullseye className="h-8 w-8 text-primary" />
+                                <Target className="h-8 w-8 text-primary" />
                             </div>
                         </div>
                         <CardTitle className="text-center text-3xl">{t.about.missionTitle}</CardTitle>
