@@ -11,7 +11,6 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import wav from 'wav';
 
 const TextToSpeechInputSchema = z.string();
 export type TextToSpeechInput = z.infer<typeof TextToSpeechInputSchema>;
@@ -34,24 +33,44 @@ const textToSpeechFlow = ai.defineFlow(
     outputSchema: TextToSpeechOutputSchema,
   },
   async query => {
-    const {media} = await ai.generate({
-      model: googleAI.model('gemini-2.5-flash-preview-tts'),
-      config: {
-        responseModalities: ['AUDIO'],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: {voiceName: 'Algenib'},
+    const maxRetries = 3;
+    let attempt = 0;
+
+    while (attempt < maxRetries) {
+      try {
+        const {media} = await ai.generate({
+          model: googleAI.model('gemini-2.5-flash-preview-tts'),
+          config: {
+            responseModalities: ['AUDIO'],
+            speechConfig: {
+              voiceConfig: {
+                prebuiltVoiceConfig: {voiceName: 'Algenib'},
+              },
+            },
           },
-        },
-      },
-      prompt: query,
-    });
-    if (!media) {
-      throw new Error('no media returned');
+          prompt: query,
+        });
+
+        if (!media) {
+          throw new Error('no media returned');
+        }
+
+        return {
+          media: media.url,
+        };
+
+      } catch (error) {
+        attempt++;
+        if (error instanceof Error && error.message.includes('503') && attempt < maxRetries) {
+          console.log(`Attempt ${attempt} failed with 503 error. Retrying in 1 second...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          console.error(`An error occurred on attempt ${attempt}:`, error);
+          throw error;
+        }
+      }
     }
     
-    return {
-      media: media.url,
-    };
+    throw new Error('Failed to generate audio after multiple retries.');
   }
 );
