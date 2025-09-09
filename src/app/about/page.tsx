@@ -21,15 +21,7 @@ export default function AboutPage() {
                 <Card className="shadow-xl">
                     <CardHeader>
                         <div className="flex justify-center mb-4">
-                            <div className="bg-primary/10 p-4 rounded-full border border-primary/20">
-                                <Image
-                                    src="https://picsum.photos/40/40"
-                                    alt="Justice Icon"
-                                    width={40}
-                                    height={40}
-                                    className="text-primary"
-                                    data-ai-hint="scales justice"
-                                />
+                            <div className="bg-primary/10 p-4 rounded-full border border-primary/20 w-16 h-16">
                             </div>
                         </div>
                         <CardTitle className="text-center text-3xl">{t.about.missionTitle}</CardTitle>
