@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/hooks/use-translations";
-import { Scale } from "lucide-react";
+import { JusticeIcon } from "@/components/justice-icon";
 
 export default function AboutPage() {
     const t = useTranslations();
@@ -22,7 +22,7 @@ export default function AboutPage() {
                     <CardHeader>
                         <div className="flex justify-center mb-4">
                             <div className="bg-primary/10 p-4 rounded-full border border-primary/20">
-                                <Scale className="h-10 w-10 text-primary" />
+                                <JusticeIcon className="h-10 w-10 text-primary" />
                             </div>
                         </div>
                         <CardTitle className="text-center text-3xl">{t.about.missionTitle}</CardTitle>

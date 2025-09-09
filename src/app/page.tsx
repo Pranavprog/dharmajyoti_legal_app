@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Bot, Search, Scale, ShieldCheck, Star } from 'lucide-react';
+import { Bot, Search, ShieldCheck, Star } from 'lucide-react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/hooks/use-translations';
 import { Guidebot } from '@/components/guidebot';
@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { JusticeIcon } from '@/components/justice-icon';
 
 export default function Home() {
   const t = useTranslations();
@@ -20,7 +21,7 @@ export default function Home() {
       title: t.home.features.upload.title,
       description: t.home.features.upload.description,
       href: '/upload',
-      icon: <Scale className="h-10 w-10" />,
+      icon: <JusticeIcon className="h-10 w-10" />,
     },
     {
       title: t.home.features.lawyer.title,
