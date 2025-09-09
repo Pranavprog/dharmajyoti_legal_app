@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import SplitText from '@/components/split-text';
+import TrueFocus from '@/components/true-focus';
 
 export default function Home() {
   const t = useTranslations();
@@ -101,7 +102,16 @@ function FeatureCard({ title, description, href, icon }: {title: string, descrip
       <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className="flex flex-col items-center justify-center text-center p-8 h-full">
             <div className="mb-4 text-primary">{icon}</div>
-            <CardTitle className="text-xl font-bold">{title}</CardTitle>
+            <CardTitle className="text-xl font-bold">
+              <TrueFocus
+                sentence={title}
+                manualMode={false}
+                blurAmount={2}
+                animationDuration={0.8}
+                pauseBetweenAnimations={0.5}
+                className="text-xl font-bold"
+              />
+            </CardTitle>
             <p className="p-0 mt-2 text-sm text-foreground/70">
               {description}
             </p>
