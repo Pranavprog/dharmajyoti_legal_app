@@ -51,7 +51,7 @@ function AppLayout({
           </nav>
           <div className="flex flex-1 items-center justify-end gap-4">
             <LanguageSwitcher />
-            <Button asChild>
+            <Button asChild className="glitter-button">
               <Link href="/upload">{t.nav.getStarted}</Link>
             </Button>
           </div>
