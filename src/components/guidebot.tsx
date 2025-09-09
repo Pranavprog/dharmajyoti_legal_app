@@ -8,7 +8,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { MessageSquareQuote, Bot, Search, ShieldCheck, HelpCircle, Upload } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
 import { ScrollArea } from './ui/scroll-area';
-import { JusticeIcon } from './justice-icon';
+import Image from 'next/image';
 
 export function Guidebot() {
   const [isOpen, setIsOpen] = useState(false);

@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useTranslations } from "@/hooks/use-translations";
-import { JusticeIcon } from "@/components/justice-icon";
+import Image from 'next/image';
 
 export default function AboutPage() {
     const t = useTranslations();
@@ -22,7 +22,14 @@ export default function AboutPage() {
                     <CardHeader>
                         <div className="flex justify-center mb-4">
                             <div className="bg-primary/10 p-4 rounded-full border border-primary/20">
-                                <JusticeIcon className="h-10 w-10 text-primary" />
+                                <Image
+                                    src="https://picsum.photos/40/40"
+                                    alt="Justice Icon"
+                                    width={40}
+                                    height={40}
+                                    className="text-primary"
+                                    data-ai-hint="scales justice"
+                                />
                             </div>
                         </div>
                         <CardTitle className="text-center text-3xl">{t.about.missionTitle}</CardTitle>
