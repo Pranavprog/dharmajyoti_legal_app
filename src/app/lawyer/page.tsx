@@ -79,7 +79,7 @@ export default function LawyerPage() {
             <CardTitle className="text-3xl">{t.lawyer.title}</CardTitle>
             <CardDescription>{t.lawyer.description}</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1 overflow-hidden p-0">
+        <CardContent className="flex-1 flex flex-col p-0">
             <ChatPanel
                 messages={messages}
                 isLoading={isChatting}
