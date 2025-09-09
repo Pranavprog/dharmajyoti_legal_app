@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
 import { useLanguage } from '@/context/language-context';
 import { useTranslations } from '@/hooks/use-translations';
+import { Progress } from '@/components/ui/progress';
 
 export interface Message {
   role: 'user' | 'assistant';
@@ -45,6 +46,7 @@ export default function UploadPage() {
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [isChatting, setIsChatting] = useState(false);
   const [view, setView] = useState<'options' | 'camera' | 'upload'>('options');
 
@@ -105,11 +107,15 @@ export default function UploadPage() {
   const analyzeTextContent = async (textContent: string, fileName: string) => {
     setDocument({ name: fileName, content: textContent });
     setView('upload');
+    
+    setProgress(50);
 
     const [summaryRes, typeRes] = await Promise.all([
       summarizeUploadedDocument({ documentText: textContent, language }),
       identifyDocumentTypeAndPurpose({ documentText: textContent, language }),
     ]);
+
+    setProgress(100);
 
     if (summaryRes && typeRes) {
       setAnalysis({
@@ -131,6 +137,7 @@ export default function UploadPage() {
 
   const handleFileLoad = async (file: File) => {
     setIsAnalyzing(true);
+    setProgress(0);
     setDocument({ name: file.name, content: t.upload.processing });
     setAnalysis(null);
     setMessages([]);
@@ -138,6 +145,7 @@ export default function UploadPage() {
     try {
       const arrayBuffer = await file.arrayBuffer();
       const dataUri = `data:${file.type};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
+      setProgress(25);
       const { text } = await extractDocumentText({ documentDataUri: dataUri });
       await analyzeTextContent(text, file.name);
     } catch (error) {
@@ -156,6 +164,7 @@ export default function UploadPage() {
   const handleCapture = async () => {
     if (!videoRef.current || !canvasRef.current) return;
     setIsAnalyzing(true);
+    setProgress(0);
     const fileName = 'camera_capture.png';
     setDocument({ name: fileName, content: t.upload.processing });
     setAnalysis(null);
@@ -170,6 +179,7 @@ export default function UploadPage() {
     const dataUri = canvas.toDataURL('image/png');
 
     try {
+      setProgress(25);
       const { text } = await extractDocumentText({ documentDataUri: dataUri });
       await analyzeTextContent(text, fileName);
     } catch (error) {
@@ -221,7 +231,7 @@ export default function UploadPage() {
   };
 
   const renderInitialView = () => (
-    <div className="flex h-full items-center justify-center p-4">
+    <main className="flex h-full items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-lg">
         <CardHeader className="text-center p-8">
           <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
@@ -241,11 +251,11 @@ export default function UploadPage() {
           </Button>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 
   const renderCameraView = () => (
-     <div className="flex h-full items-center justify-center p-4">
+     <main className="flex h-full items-center justify-center p-4">
         <Card className="w-full max-w-2xl shadow-lg">
             <CardHeader className="p-8">
                 <CardTitle>{t.upload.cameraTitle}</CardTitle>
@@ -275,11 +285,11 @@ export default function UploadPage() {
                 </div>
             </CardContent>
         </Card>
-     </div>
+     </main>
   );
 
   const renderUploadView = () => (
-    <div className="flex h-full items-center justify-center p-4">
+    <main className="flex h-full items-center justify-center p-4">
         <Card className="w-full max-w-2xl shadow-lg">
             <CardHeader className="text-center p-8">
                 <CardTitle className="text-3xl">{t.upload.uploadTitle}</CardTitle>
@@ -292,25 +302,24 @@ export default function UploadPage() {
                 </div>
             </CardContent>
         </Card>
-    </div>
+    </main>
   );
   
   const renderMainView = () => {
     if (isAnalyzing) {
         return (
-            <div className="flex h-full items-center justify-center p-4">
+            <main className="flex h-full items-center justify-center p-4">
                 <Card className="w-full max-w-2xl shadow-lg text-center">
                     <CardHeader className="p-8">
                         <CardTitle className="text-2xl">{t.common.analyzingDocument}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-8 pt-0">
                         <p>{t.common.pleaseWait}</p>
-                        <div className="mt-4 h-2 bg-primary/20 rounded-full overflow-hidden">
-                            <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
-                        </div>
+                        <Progress value={progress} className="w-full mt-4" />
+                        <p className="mt-2 text-sm text-muted-foreground">{progress}%</p>
                     </CardContent>
                 </Card>
-            </div>
+            </main>
         )
     }
 

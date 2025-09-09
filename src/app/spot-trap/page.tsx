@@ -13,17 +13,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
 import { useTranslations } from '@/hooks/use-translations';
+import { Progress } from '@/components/ui/progress';
 
 export default function SpotTrapPage() {
   const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
   const [analysis, setAnalysis] = useState<SpotTrapsOutput | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = useTranslations();
 
   const handleFileLoad = async (file: File) => {
     setIsAnalyzing(true);
+    setProgress(0);
     setDocument({ name: file.name, content: t.spotTrap.processing });
     setAnalysis(null);
 
@@ -31,13 +34,17 @@ export default function SpotTrapPage() {
       const arrayBuffer = await file.arrayBuffer();
       const dataUri = `data:${file.type};base64,${Buffer.from(arrayBuffer).toString('base64')}`;
       
+      setProgress(25);
       setDocument({ name: file.name, content: t.spotTrap.extracting });
       const { text } = await extractDocumentText({ documentDataUri: dataUri });
       
+      setProgress(50);
       setDocument({ name: file.name, content: text });
 
+      setProgress(75);
       const trapResult = await spotTraps({ documentText: text, language });
       setAnalysis(trapResult);
+      setProgress(100);
 
     } catch (error) {
       console.error(error);
@@ -53,7 +60,7 @@ export default function SpotTrapPage() {
   };
 
   const renderInitialView = () => (
-    <div className="w-full max-w-2xl">
+    <main className="w-full max-w-2xl flex justify-center items-center p-4">
         <Card className="shadow-xl">
             <CardHeader className="text-center p-8">
                 <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
@@ -66,28 +73,26 @@ export default function SpotTrapPage() {
                 <FileUploader onFileLoad={handleFileLoad} disabled={isAnalyzing} />
             </CardContent>
         </Card>
-    </div>
+    </main>
   );
   
   const renderLoadingView = () => (
-    <div className="w-full max-w-2xl">
-      <Card className="shadow-xl text-center">
+    <main className="w-full max-w-2xl flex justify-center items-center p-4">
+      <Card className="shadow-xl text-center w-full">
         <CardHeader className="p-8">
           <CardTitle className="text-2xl">{t.spotTrap.loadingTitle}</CardTitle>
           <CardDescription>{t.spotTrap.loadingDescription}</CardDescription>
         </CardHeader>
         <CardContent className="p-8 pt-0">
-            <div className="h-2 bg-primary/20 rounded-full overflow-hidden">
-                <div className="h-full bg-primary animate-pulse" style={{ width: '100%' }}></div>
-            </div>
-            <p className="mt-4 text-sm text-muted-foreground">{document?.content}</p>
+            <Progress value={progress} className="w-full" />
+            <p className="mt-4 text-sm text-muted-foreground">{document?.content} - {progress}%</p>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 
   const renderAnalysisView = () => (
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl">
+     <main className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-7xl p-4 sm:p-6 md:p-8">
         <div className="md:col-span-1">
             <Card className="shadow-lg sticky top-8">
                 <CardHeader>
@@ -110,7 +115,7 @@ export default function SpotTrapPage() {
                 </>
             ) : null}
         </div>
-     </div>
+     </main>
   );
 
   const renderContent = () => {
@@ -124,9 +129,9 @@ export default function SpotTrapPage() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-12 md:py-20 lg:py-24 flex justify-center">
+    <div className="container mx-auto px-4 py-12 md:py-20 lg:py-24 flex justify-center">
         {renderContent()}
-    </main>
+    </div>
   );
 }
 
