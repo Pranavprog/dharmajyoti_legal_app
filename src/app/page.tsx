@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Bot, Search, ShieldCheck, Star } from 'lucide-react';
+import { Bot, Search, ShieldCheck, Star, Upload } from 'lucide-react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/hooks/use-translations';
 import { Guidebot } from '@/components/guidebot';
@@ -21,7 +21,7 @@ export default function Home() {
       title: t.home.features.upload.title,
       description: t.home.features.upload.description,
       href: '/upload',
-      icon: <JusticeIcon className="h-10 w-10" />,
+      icon: <Upload className="h-10 w-10" />,
     },
     {
       title: t.home.features.lawyer.title,
@@ -83,7 +83,7 @@ export default function Home() {
 function FeatureCard({ title, description, href, icon }: {title: string, description: string, href: string, icon: React.ReactNode}) {
   return (
     <Link href={href} className="group">
-      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+      <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
         <CardContent className="flex flex-col items-center justify-center text-center p-8 h-full">
             <div className="mb-4 text-primary">{icon}</div>
             <CardTitle className="text-xl font-bold">{title}</CardTitle>

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MessageSquareQuote, Bot, Search, ShieldCheck, HelpCircle } from 'lucide-react';
+import { MessageSquareQuote, Bot, Search, ShieldCheck, HelpCircle, Upload } from 'lucide-react';
 import { useTranslations } from '@/hooks/use-translations';
 import { ScrollArea } from './ui/scroll-area';
 import { JusticeIcon } from './justice-icon';
@@ -18,7 +18,7 @@ export function Guidebot() {
     {
       id: 'upload',
       title: t.home.features.upload.title,
-      icon: <JusticeIcon className="h-5 w-5 mr-3 text-primary" />,
+      icon: <Upload className="h-5 w-5 mr-3 text-primary" />,
       content: <p>{t.guidebot.upload}</p>,
     },
     {
