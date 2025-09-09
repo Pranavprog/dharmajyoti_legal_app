@@ -11,7 +11,6 @@ import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { JusticeIcon } from '@/components/justice-icon';
 
 export default function Home() {
   const t = useTranslations();
