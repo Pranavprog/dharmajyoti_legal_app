@@ -115,6 +115,7 @@ export const fr = {
     audioError: 'Impossible de générer l\'audio pour cette section.',
     unsupportedFile: 'Type de Fichier non Pris en Charge',
     unsupportedFileDesc: 'Veuillez télécharger un fichier texte brut (.txt) ou PDF.',
+    serviceUnavailable: 'Le service IA est actuellement surchargé. Veuillez réessayer dans quelques instants.',
   },
   common: {
     document: 'Document',

@@ -53,11 +53,15 @@ export default function LawyerPage() {
       setMessages([...newMessages, { role: 'assistant', content: response ?? t.common.error }]);
     } catch (error) {
       console.error(error);
+      let errorMessage = t.common.error;
+      if (error instanceof Error && error.message.includes('503')) {
+        errorMessage = t.toast.serviceUnavailable;
+      }
       setMessages([
         ...newMessages,
         {
           role: 'assistant',
-          content: t.common.error,
+          content: errorMessage,
         },
       ]);
     } finally {

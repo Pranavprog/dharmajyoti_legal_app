@@ -115,6 +115,7 @@ export const en = {
     audioError: 'Could not generate audio for this section.',
     unsupportedFile: 'Unsupported File Type',
     unsupportedFileDesc: 'Please upload a plain text (.txt) or PDF file.',
+    serviceUnavailable: 'The AI service is currently overloaded. Please try again in a few moments.',
   },
   common: {
     document: 'Document',

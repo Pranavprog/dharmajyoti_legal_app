@@ -115,6 +115,7 @@ export const es = {
     audioError: 'No se pudo generar audio para esta sección.',
     unsupportedFile: 'Tipo de Archivo no Soportado',
     unsupportedFileDesc: 'Por favor, sube un archivo de texto plano (.txt) o PDF.',
+    serviceUnavailable: 'El servicio de IA está actualmente sobrecargado. Por favor, inténtelo de nuevo en unos momentos.',
   },
   common: {
     document: 'Documento',
