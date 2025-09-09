@@ -98,13 +98,7 @@ function FeatureCard({ title, description, href, icon }: {title: string, descrip
         <CardContent className="flex flex-col items-center justify-center text-center p-8 h-full">
             <div className="mb-4 text-primary">{icon}</div>
             <CardTitle className="text-xl font-bold">
-              <TrueFocus
-                sentence={title}
-                blurAmount={2}
-                animationDuration={0.8}
-                pauseBetweenAnimations={0.5}
-                className="text-xl font-bold"
-              />
+              {title}
             </CardTitle>
             <p className="p-0 mt-2 text-sm text-foreground/70">
               {description}
