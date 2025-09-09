@@ -14,6 +14,34 @@ import { ThumbsUp, ThumbsDown, Lightbulb, Search, FileText, Volume2, Loader } fr
 import { useLanguage } from '@/context/language-context';
 import { useTranslations } from '@/hooks/use-translations';
 import { Progress } from '@/components/ui/progress';
+import wav from 'wav';
+
+async function toWav(
+  pcmData: Buffer,
+  channels = 1,
+  rate = 24000,
+  sampleWidth = 2
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const writer = new wav.Writer({
+      channels,
+      sampleRate: rate,
+      bitDepth: sampleWidth * 8,
+    });
+
+    let bufs = [] as any[];
+    writer.on('error', reject);
+    writer.on('data', function (d) {
+      bufs.push(d);
+    });
+    writer.on('end', function () {
+      resolve(Buffer.concat(bufs).toString('base64'));
+    });
+
+    writer.write(pcmData);
+    writer.end();
+  });
+}
 
 export default function FuturePage() {
     const [document, setDocument] = useState<{ name: string; content: string } | null>(null);
@@ -173,8 +201,14 @@ function ScenarioCard({ title, content, icon }: { title: string, content: string
         try {
             const textToRead = `${title}. ${content}`;
             const response = await textToSpeech(textToRead);
-            audioDataRef.current = response.media;
-            const audio = new Audio(response.media);
+            const audioBuffer = Buffer.from(
+                response.media.substring(response.media.indexOf(',') + 1),
+                'base64'
+            );
+            const wavBase64 = await toWav(audioBuffer);
+            const dataUri = 'data:audio/wav;base64,' + wavBase64;
+            audioDataRef.current = dataUri;
+            const audio = new Audio(dataUri);
             audioRef.current = audio;
             audio.play();
         } catch (error) {

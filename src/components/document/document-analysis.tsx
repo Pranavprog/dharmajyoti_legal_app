@@ -9,6 +9,34 @@ import { textToSpeech } from '@/ai/flows/text-to-speech';
 import { Volume2, Loader } from 'lucide-react';
 import type { Analysis } from '@/app/upload/page';
 import { useTranslations } from '@/hooks/use-translations';
+import wav from 'wav';
+
+async function toWav(
+  pcmData: Buffer,
+  channels = 1,
+  rate = 24000,
+  sampleWidth = 2
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const writer = new wav.Writer({
+      channels,
+      sampleRate: rate,
+      bitDepth: sampleWidth * 8,
+    });
+
+    let bufs = [] as any[];
+    writer.on('error', reject);
+    writer.on('data', function (d) {
+      bufs.push(d);
+    });
+    writer.on('end', function () {
+      resolve(Buffer.concat(bufs).toString('base64'));
+    });
+
+    writer.write(pcmData);
+    writer.end();
+  });
+}
 
 interface DocumentAnalysisProps {
   analysis: Analysis | null;
@@ -82,8 +110,14 @@ export function DocumentAnalysis({ analysis, isLoading }: DocumentAnalysisProps)
           ${t.analysis.keywords}: ${analysis.keywords.join(', ')}.
         `;
         const response = await textToSpeech(textToRead);
-        audioDataRef.current = response.media;
-        const audio = new Audio(response.media);
+        const audioBuffer = Buffer.from(
+            response.media.substring(response.media.indexOf(',') + 1),
+            'base64'
+        );
+        const wavBase64 = await toWav(audioBuffer);
+        const dataUri = 'data:audio/wav;base64,' + wavBase64;
+        audioDataRef.current = dataUri;
+        const audio = new Audio(dataUri);
         audioRef.current = audio;
         audio.play();
     } catch (error) {
