@@ -70,7 +70,7 @@ export default function LawyerPage() {
   };
 
   return (
-    <div className="flex justify-center items-start p-4 sm:p-6 md:p-8 h-[calc(100vh-4rem)] bg-background">
+    <main className="flex justify-center items-start p-4 sm:p-6 md:p-8 h-full">
       <Card className="w-full max-w-4xl h-full flex flex-col shadow-2xl">
         <CardHeader className="text-center p-8">
             <div className="mx-auto mb-4 bg-primary/10 p-4 rounded-full w-fit border border-primary/20">
@@ -89,6 +89,6 @@ export default function LawyerPage() {
             />
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

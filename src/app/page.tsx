@@ -45,7 +45,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex-1">
+    <main>
       <section className="relative w-full py-24 md:py-32 lg:py-48 overflow-hidden">
         <div className="absolute top-0 left-0 -z-10 h-full w-full bg-background bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,hsl(var(--primary)/0.3),rgba(255,255,255,0))]"></div>
         <div className="container px-4 md:px-6 text-center">

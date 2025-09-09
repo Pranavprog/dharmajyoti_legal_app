@@ -325,7 +325,7 @@ export default function UploadPage() {
     }
     
     return (
-      <div className="grid h-full gap-6 md:grid-cols-2 lg:grid-cols-5">
+      <main className="grid h-full gap-6 md:grid-cols-2 lg:grid-cols-5 p-4 sm:p-6 md:p-8">
         <div className="flex flex-col gap-4 h-full min-h-[400px] lg:col-span-3">
           <div className='flex justify-between items-center'>
             <h2 className="text-2xl font-semibold">{t.common.documentViewer}</h2>
@@ -359,15 +359,13 @@ export default function UploadPage() {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] w-full">
-      <main className="flex flex-1 flex-col gap-4 overflow-auto bg-background p-4 sm:p-6 md:p-8">
-          {renderMainView()}
-      </main>
-    </div>
+    <>
+      {renderMainView()}
+    </>
   );
 }

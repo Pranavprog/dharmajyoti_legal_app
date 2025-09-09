@@ -37,9 +37,11 @@ function AppLayout({
     return pathname === path ? 'text-foreground' : 'text-foreground/60';
   };
 
+  const isFullHeightPage = ['/upload', '/lawyer'].includes(pathname);
+
   return (
     <div className={cn(
-        "min-h-screen bg-background font-sans antialiased",
+        "min-h-screen bg-background font-sans antialiased flex flex-col",
         fontSans.variable,
         fontLora.variable
       )}>
@@ -61,7 +63,9 @@ function AppLayout({
           </div>
         </div>
       </header>
-      {children}
+      <div className={cn("flex-1", isFullHeightPage && "h-[calc(100vh-4rem)]")}>
+        {children}
+      </div>
       <Toaster />
     </div>
   )
