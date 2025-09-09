@@ -44,10 +44,6 @@ export default function Home() {
     },
   ];
 
-  const handleAnimationComplete = () => {
-    console.log('All letters have animated!');
-  };
-
   return (
     <main className="flex-1">
       <section className="relative w-full py-24 md:py-32 lg:py-48 overflow-hidden">
@@ -66,7 +62,6 @@ export default function Home() {
                   threshold={0.1}
                   rootMargin="-100px"
                   textAlign="center"
-                  onLetterAnimationComplete={handleAnimationComplete}
                 />
                 <p className="mt-6 text-lg text-foreground/80 md:text-xl">
                     {t.home.tagline}
@@ -105,7 +100,6 @@ function FeatureCard({ title, description, href, icon }: {title: string, descrip
             <CardTitle className="text-xl font-bold">
               <TrueFocus
                 sentence={title}
-                manualMode={false}
                 blurAmount={2}
                 animationDuration={0.8}
                 pauseBetweenAnimations={0.5}

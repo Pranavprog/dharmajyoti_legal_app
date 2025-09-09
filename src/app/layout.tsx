@@ -38,7 +38,11 @@ function AppLayout({
   };
 
   return (
-    <>
+    <div className={cn(
+        "min-h-screen bg-background font-sans antialiased",
+        fontSans.variable,
+        fontLora.variable
+      )}>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center px-4 md:px-6">
           <Link href="/" className="mr-8">
@@ -59,7 +63,7 @@ function AppLayout({
       </header>
       {children}
       <Toaster />
-    </>
+    </div>
   )
 }
 
@@ -73,11 +77,7 @@ export default function RootLayout({
       <head>
         <title>DharmaJyoti - Your AI-powered legal assistant.</title>
       </head>
-      <body className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-          fontLora.variable
-        )}>
+      <body>
         <LanguageProvider>
           <AppLayout>{children}</AppLayout>
         </LanguageProvider>

@@ -17,9 +17,9 @@ interface TrueFocusProps {
 const TrueFocus: React.FC<TrueFocusProps> = ({
   sentence,
   manualMode = false,
-  blurAmount = 5,
+  blurAmount = 2,
   borderColor = 'transparent',
-  animationDuration = 1,
+  animationDuration = 0.8,
   pauseBetweenAnimations = 0.5,
   className,
 }) => {
@@ -61,4 +61,4 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
   );
 };
 
-export default TrueFocus;
+export default React.memo(TrueFocus);

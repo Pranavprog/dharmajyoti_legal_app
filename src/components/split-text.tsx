@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useInView } from 'react-intersection-observer';
@@ -58,18 +58,18 @@ const SplitText: React.FC<SplitTextProps> = ({
         }
       );
     }
-  }, [inView]);
+  }, { scope: containerRef, dependencies: [inView] });
 
   const splitText = (text: string) => {
     if (splitType === 'words') {
       return text.split(' ').map((word, index) => (
-        <span key={index} style={{ display: 'inline-block' }}>
+        <span key={index} style={{ display: 'inline-block', opacity: 0 }}>
           {word}&nbsp;
         </span>
       ));
     }
     return text.split('').map((char, index) => (
-      <span key={index} style={{ display: 'inline-block' }}>
+      <span key={index} style={{ display: 'inline-block', opacity: 0 }}>
         {char === ' ' ? '\u00A0' : char}
       </span>
     ));
