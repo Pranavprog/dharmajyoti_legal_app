@@ -12,7 +12,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import SplitText from '@/components/split-text';
-import TrueFocus from '@/components/true-focus';
 
 export default function Home() {
   const t = useTranslations();
