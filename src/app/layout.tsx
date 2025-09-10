@@ -56,8 +56,8 @@ function AppLayout({
         fontLora.variable
       )}>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center">
+        <div className="container flex h-16 items-center px-4 md:px-6">
+          <Link href="/" className="mr-6 flex items-center">
             <Logo />
           </Link>
           
@@ -67,14 +67,14 @@ function AppLayout({
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 ml-auto">
               <LanguageSwitcher />
               <Button asChild className="glitter-button">
                 <Link href="/upload">{t.nav.getStarted}</Link>
               </Button>
           </div>
 
-          <div className="md:hidden">
+          <div className="ml-auto md:hidden">
                  <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon">
