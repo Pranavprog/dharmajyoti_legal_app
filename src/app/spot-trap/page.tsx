@@ -49,10 +49,14 @@ export default function SpotTrapPage() {
 
     } catch (error) {
       console.error(error);
+      let description = t.toast.analysisError;
+      if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
+        description = t.toast.serviceUnavailable;
+      }
       toast({
         variant: 'destructive',
         title: t.toast.analysisFailed,
-        description: t.toast.analysisError,
+        description,
       });
       setDocument(null);
     } finally {

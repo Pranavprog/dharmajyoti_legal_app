@@ -54,7 +54,7 @@ export default function LawyerPage() {
     } catch (error) {
       console.error(error);
       let errorMessage = t.common.error;
-      if (error instanceof Error && error.message.includes('503')) {
+      if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
         errorMessage = t.toast.serviceUnavailable;
       }
       setMessages([

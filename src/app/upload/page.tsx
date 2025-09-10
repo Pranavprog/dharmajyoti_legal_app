@@ -150,10 +150,14 @@ export default function UploadPage() {
       await analyzeTextContent(text, file.name);
     } catch (error) {
       console.error(error);
+      let description = t.toast.analysisError;
+      if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
+        description = t.toast.serviceUnavailable;
+      }
       toast({
         variant: 'destructive',
         title: t.toast.analysisFailed,
-        description: t.toast.analysisError,
+        description: description,
       });
       setDocument(null);
     } finally {
@@ -184,10 +188,14 @@ export default function UploadPage() {
       await analyzeTextContent(text, fileName);
     } catch (error) {
       console.error(error);
+      let description = t.toast.cameraAnalysisError;
+       if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
+        description = t.toast.serviceUnavailable;
+      }
       toast({
         variant: 'destructive',
         title: t.toast.analysisFailed,
-        description: t.toast.cameraAnalysisError,
+        description: description,
       });
       setDocument(null);
     } finally {
@@ -218,11 +226,15 @@ export default function UploadPage() {
 
     } catch (error) {
       console.error(error);
+      let errorMessage = t.common.error;
+       if (error instanceof Error && (error.message.includes('503') || error.message.includes('overloaded'))) {
+        errorMessage = t.toast.serviceUnavailable;
+      }
       setMessages([
         ...newMessages,
         {
           role: 'assistant',
-          content: t.common.error,
+          content: errorMessage,
         },
       ]);
     } finally {
