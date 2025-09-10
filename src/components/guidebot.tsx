@@ -61,6 +61,7 @@ export function Guidebot() {
   return (
     <>
       <Button
+        size="icon"
         className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-2xl z-50 glitter-button"
         onClick={() => setIsOpen(true)}
         aria-label="Open Guide"
