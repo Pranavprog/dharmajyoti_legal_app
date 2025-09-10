@@ -36,24 +36,24 @@ export default function TipsPage() {
 
     return (
         <main className="container mx-auto px-4 py-12 md:py-20 lg:py-24">
-            <div className="text-center mb-16">
-                <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary mb-4">{t.tips.title}</h1>
-                <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto">
+            <div className="text-center mb-12 md:mb-16">
+                <h1 className="text-3xl md:text-5xl font-bold font-headline text-primary mb-4">{t.tips.title}</h1>
+                <p className="text-base md:text-xl text-foreground/80 max-w-3xl mx-auto">
                     {t.tips.subtitle}
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {legalTips.map((tip, index) => (
                     <Card key={index} className="shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
-                        <CardHeader className="flex flex-row items-start gap-4">
+                        <CardHeader className="flex flex-row items-start gap-4 p-4 md:p-6">
                             <div className="p-2 bg-primary/10 rounded-full mt-1">
                                 <Lightbulb className="h-6 w-6 text-primary"/>
                             </div>
-                            <CardTitle className="text-xl">{tip.title}</CardTitle>
+                            <CardTitle className="text-lg md:text-xl">{tip.title}</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex-1">
-                            <p className="text-foreground/80">{tip.content}</p>
+                        <CardContent className="flex-1 p-4 md:p-6 pt-0">
+                            <p className="text-foreground/80 text-sm md:text-base">{tip.content}</p>
                         </CardContent>
                     </Card>
                 ))}
