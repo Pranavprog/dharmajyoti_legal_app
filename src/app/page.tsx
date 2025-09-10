@@ -45,7 +45,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="flex-1">
+    <main className="flex-1 flex flex-col items-center">
       <section className="relative w-full py-20 md:py-32 lg:py-40 overflow-hidden">
         <div className="absolute top-0 left-0 -z-10 h-full w-full bg-background bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,hsl(var(--primary)/0.3),rgba(255,255,255,0))]"></div>
         <div className="container px-4 md:px-6 text-center">
@@ -70,7 +70,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container px-4 md:px-6 pb-20 md:pb-32">
+      <section className="w-full container px-4 md:px-6 pb-20 md:pb-32">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => (
             <FeatureCard key={feature.title} {...feature} />
@@ -78,7 +78,7 @@ export default function Home() {
         </div>
       </section>
       
-       <section className="container px-4 md:px-6 pb-20 md:pb-32 text-center">
+       <section className="w-full container px-4 md:px-6 pb-20 md:pb-32 text-center">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">{t.home.review.title}</h2>
         <p className="mx-auto max-w-[700px] text-foreground/80 text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed mt-4">
           {t.home.review.description}
