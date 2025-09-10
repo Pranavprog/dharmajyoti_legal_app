@@ -56,25 +56,26 @@ function AppLayout({
         fontLora.variable
       )}>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center px-4 md:px-6">
-          <Link href="/" className="mr-6 flex items-center">
-            <Logo />
-          </Link>
-          
-          <nav className="hidden items-center gap-6 text-sm font-medium md:flex flex-1 justify-center">
-            {navLinks.map(link => (
-                <Link key={link.href} href={link.href} className={`transition-colors hover:text-foreground/80 ${getLinkClass(link.href)}`}>{link.label}</Link>
-            ))}
-          </nav>
+        <div className="container flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="flex items-center gap-6">
+            <Link href="/" className="flex items-center">
+              <Logo />
+            </Link>
+            <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+              {navLinks.map(link => (
+                  <Link key={link.href} href={link.href} className={`transition-colors hover:text-foreground/80 ${getLinkClass(link.href)}`}>{link.label}</Link>
+              ))}
+            </nav>
+          </div>
 
-          <div className="hidden md:flex items-center gap-4 ml-auto">
+          <div className="hidden md:flex items-center gap-4">
               <LanguageSwitcher />
               <Button asChild>
                 <Link href="/upload">{t.nav.getStarted}</Link>
               </Button>
           </div>
 
-          <div className="ml-auto flex items-center md:hidden">
+          <div className="flex items-center md:hidden">
                  <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon">
