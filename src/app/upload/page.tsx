@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,7 +16,7 @@ import { interactiveLegalGuidance } from '@/ai/flows/interactive-legal-guidance'
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { BotMessageSquare, Camera, Upload, Loader2 } from 'lucide-react';
+import { BotMessageSquare, Camera, Upload, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { extractDocumentText } from '@/ai/flows/extract-document-text';
 import { useLanguage } from '@/context/language-context';
@@ -51,6 +51,7 @@ export default function UploadPage() {
   const [view, setView] = useState<'options' | 'camera' | 'upload'>('options');
 
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment');
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -73,20 +74,15 @@ export default function UploadPage() {
       },
     ]);
   }, [t]);
-
-  useEffect(() => {
-    if (view !== 'camera') {
-        if (videoRef.current?.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-            videoRef.current.srcObject = null;
-        }
-        return;
-    }
-
-    const getCameraPermission = async () => {
+  
+  const getCameraPermission = useCallback(async (mode: 'user' | 'environment') => {
+      if (videoRef.current?.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+      
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } });
         setHasCameraPermission(true);
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -100,9 +96,27 @@ export default function UploadPage() {
           description: t.toast.cameraError,
         });
       }
-    };
-    getCameraPermission();
-  }, [view, toast, t]);
+    }, [toast, t]);
+
+  useEffect(() => {
+    if (view !== 'camera') {
+        if (videoRef.current?.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+            videoRef.current.srcObject = null;
+        }
+        return;
+    }
+
+    getCameraPermission(facingMode);
+    
+    return () => {
+         if (videoRef.current?.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+        }
+    }
+  }, [view, facingMode, getCameraPermission]);
 
   const analyzeTextContent = async (textContent: string, fileName: string) => {
     setDocument({ name: fileName, content: textContent });
@@ -110,28 +124,47 @@ export default function UploadPage() {
     
     setProgress(50);
 
-    const [summaryRes, typeRes] = await Promise.all([
-      summarizeUploadedDocument({ documentText: textContent, language }),
-      identifyDocumentTypeAndPurpose({ documentText: textContent, language }),
-    ]);
+    try {
+        const [summaryRes, typeRes] = await Promise.all([
+            summarizeUploadedDocument({ documentText: textContent, language }),
+            identifyDocumentTypeAndPurpose({ documentText: textContent, language }),
+        ]);
 
-    setProgress(100);
+        setProgress(100);
 
-    if (summaryRes && typeRes) {
-      setAnalysis({
-        summary: summaryRes.summary,
-        documentType: typeRes.documentType,
-        purpose: typeRes.purpose,
-        keywords: summaryRes.keywords,
-      });
-      setMessages([
-        {
-          role: 'assistant',
-          content: t.upload.analysisComplete(fileName),
-        },
-      ]);
-    } else {
-      throw new Error('Failed to analyze document.');
+        if (summaryRes && typeRes) {
+            setAnalysis({
+                summary: summaryRes.summary,
+                documentType: typeRes.documentType,
+                purpose: typeRes.purpose,
+                keywords: summaryRes.keywords,
+            });
+            setMessages([
+                {
+                role: 'assistant',
+                content: t.upload.analysisComplete(fileName),
+                },
+            ]);
+        } else {
+            throw new Error('Failed to analyze document.');
+        }
+    } catch(error) {
+        console.error(error);
+        let description = t.toast.analysisError;
+        if (error instanceof Error) {
+            if (error.message.includes('429')) {
+                description = t.toast.quotaExceeded;
+            } else if (error.message.includes('503') || error.message.includes('overloaded')) {
+                description = t.toast.serviceUnavailable;
+            }
+        }
+        toast({
+            variant: 'destructive',
+            title: t.toast.analysisFailed,
+            description,
+        });
+        setDocument(null);
+        setAnalysis(null);
     }
   }
 
@@ -249,6 +282,10 @@ export default function UploadPage() {
       setIsChatting(false);
     }
   };
+  
+  const handleFlipCamera = () => {
+    setFacingMode(prev => (prev === 'user' ? 'environment' : 'user'));
+  };
 
   const renderInitialView = () => (
     <main className="flex h-full items-center justify-center p-4">
@@ -294,14 +331,19 @@ export default function UploadPage() {
                 </div>
                  <div className="mt-6 flex justify-between">
                     <Button variant="outline" onClick={() => setView('options')}>{t.common.back}</Button>
-                    <Button onClick={handleCapture} disabled={isAnalyzing || hasCameraPermission !== true}>
-                        {isAnalyzing ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            {t.common.analyzing}
-                          </>
-                        ) : t.upload.capture}
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button onClick={handleFlipCamera} size="icon" variant="outline" className="md:hidden">
+                            <RefreshCw className="h-5 w-5" />
+                        </Button>
+                        <Button onClick={handleCapture} disabled={isAnalyzing || hasCameraPermission !== true}>
+                            {isAnalyzing ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                {t.common.analyzing}
+                            </>
+                            ) : t.upload.capture}
+                        </Button>
+                    </div>
                 </div>
             </CardContent>
         </Card>
