@@ -61,7 +61,7 @@ function AppLayout({
             <Logo />
           </Link>
           
-          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+          <nav className="hidden items-center gap-6 text-sm font-medium md:flex flex-1 justify-center">
             {navLinks.map(link => (
                 <Link key={link.href} href={link.href} className={`transition-colors hover:text-foreground/80 ${getLinkClass(link.href)}`}>{link.label}</Link>
             ))}
@@ -69,12 +69,12 @@ function AppLayout({
 
           <div className="hidden md:flex items-center gap-4 ml-auto">
               <LanguageSwitcher />
-              <Button asChild className="glitter-button">
+              <Button asChild>
                 <Link href="/upload">{t.nav.getStarted}</Link>
               </Button>
           </div>
 
-          <div className="ml-auto md:hidden">
+          <div className="ml-auto flex items-center md:hidden">
                  <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon">
@@ -104,7 +104,7 @@ function AppLayout({
                             </nav>
                             <div className="mt-auto space-y-6">
                                 <LanguageSwitcher />
-                                <Button asChild className="w-full glitter-button" size="lg">
+                                <Button asChild className="w-full" size="lg">
                                   <Link href="/upload" onClick={() => setIsMobileMenuOpen(false)}>{t.nav.getStarted}</Link>
                                 </Button>
                             </div>
