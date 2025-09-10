@@ -115,7 +115,7 @@ function AppLayout({
             </div>
         </div>
       </header>
-      <div className={cn("flex-1", isFullHeightPage && "h-[calc(100vh-4rem)]")}>
+      <div className={cn("flex-1 flex flex-col", isFullHeightPage && "h-[calc(100vh-4rem)]")}>
         {children}
       </div>
       <Toaster />

@@ -77,6 +77,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  }
+  body::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
   }
   h1,
   h2,
@@ -85,55 +91,5 @@
   h5,
   h6 {
     @apply font-headline;
-  }
-}
-
-@layer utilities {
-  .glitter-button {
-    position: relative;
-    overflow: hidden;
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .glitter-button:hover {
-    transform: scale(1.05);
-  }
-
-  .glitter-button::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(
-      from 180deg at 50% 50%,
-      hsla(var(--primary), 0.8) 0%,
-      hsla(var(--accent), 0.7) 20%,
-      hsla(var(--primary), 0.9) 40%,
-      hsla(var(--accent), 0.8) 60%,
-      hsla(var(--primary), 1) 80%,
-      hsla(var(--primary), 0.8) 100%
-    );
-    transform-origin: center;
-    animation: rotate-glow 5s linear infinite;
-    transform: translate(-50%, -50%);
-  }
-
-  .glitter-button > * {
-    position: relative;
-    z-index: 1;
-  }
-}
-
-
-@keyframes rotate-glow {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
