@@ -41,8 +41,6 @@ function AppLayout({
     return pathname === path ? 'text-foreground font-semibold' : 'text-foreground/60';
   };
 
-  const isFullHeightPage = ['/upload', '/lawyer', '/future', '/spot-trap'].includes(pathname);
-
   const navLinks = [
     { href: '/', label: t.nav.home },
     { href: '/about', label: t.nav.about },
@@ -51,12 +49,12 @@ function AppLayout({
 
   return (
     <div className={cn(
-        "h-full bg-background font-sans antialiased flex flex-col",
+        "min-h-screen bg-background font-sans antialiased flex flex-col",
         fontSans.variable,
         fontLora.variable
       )}>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between px-0">
+        <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center">
               <Logo />
@@ -115,9 +113,9 @@ function AppLayout({
             </div>
         </div>
       </header>
-      <div className={cn("flex-1 flex flex-col", isFullHeightPage && "overflow-y-auto")}>
+      <main className="flex-1">
         {children}
-      </div>
+      </main>
       <Toaster />
     </div>
   )
