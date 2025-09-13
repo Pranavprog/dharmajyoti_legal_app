@@ -1,7 +1,4 @@
 
-'use client';
-
-import Link from 'next/link';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { Logo } from '@/components/logo';
@@ -14,7 +11,8 @@ import { Lora, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
-import { useState, memo } from 'react';
+import { useState, memo, ReactNode } from 'react';
+import Link from 'next/link';
 
 const fontSans = PT_Sans({
   subsets: ['latin'],
@@ -27,11 +25,9 @@ const fontLora = Lora({
   variable: '--font-lora',
 });
 
-function AppLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+function AppLayout({ children }: { children: ReactNode }) {
+  'use client';
+  
   const t = useTranslations();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,9 +43,7 @@ function AppLayout({
   ];
 
   return (
-    <div className={cn(
-        "min-h-screen bg-background antialiased flex flex-col",
-      )}>
+    <div className="min-h-screen bg-background antialiased flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6">
@@ -115,7 +109,7 @@ function AppLayout({
       </main>
       <Toaster />
     </div>
-  )
+  );
 }
 
 export default function RootLayout({
