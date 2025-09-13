@@ -52,7 +52,34 @@ const extractDocumentTextFlow = ai.defineFlow(
     outputSchema: ExtractDocumentTextOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const maxRetries = 3;
+    let attempt = 0;
+
+    while (attempt < maxRetries) {
+      try {
+        const {output} = await prompt(input);
+        if (!output) {
+          throw new Error('No output from prompt');
+        }
+        return output;
+      } catch (error) {
+        attempt++;
+        if (
+          error instanceof Error &&
+          error.message.includes('503') &&
+          attempt < maxRetries
+        ) {
+          console.log(
+            `Attempt ${attempt} failed with 503 error. Retrying in 1 second...`
+          );
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          console.error(`An error occurred on attempt ${attempt}:`, error);
+          throw error;
+        }
+      }
+    }
+    
+    throw new Error('Failed to extract document text after multiple retries.');
   }
 );
