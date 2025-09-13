@@ -41,7 +41,7 @@ function AppLayout({
     return pathname === path ? 'text-foreground font-semibold' : 'text-foreground/60';
   };
 
-  const isFullHeightPage = ['/upload', '/lawyer'].includes(pathname);
+  const isFullHeightPage = ['/upload', '/lawyer', '/future', '/spot-trap'].includes(pathname);
 
   const navLinks = [
     { href: '/', label: t.nav.home },
@@ -51,7 +51,7 @@ function AppLayout({
 
   return (
     <div className={cn(
-        "min-h-screen bg-background font-sans antialiased flex flex-col",
+        "h-full bg-background font-sans antialiased flex flex-col",
         fontSans.variable,
         fontLora.variable
       )}>
@@ -115,7 +115,7 @@ function AppLayout({
             </div>
         </div>
       </header>
-      <div className={cn("flex-1 flex flex-col", isFullHeightPage && "h-[calc(100vh-4rem)]")}>
+      <div className={cn("flex-1 flex flex-col", isFullHeightPage && "overflow-y-auto")}>
         {children}
       </div>
       <Toaster />
