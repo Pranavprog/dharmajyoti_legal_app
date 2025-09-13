@@ -14,7 +14,7 @@ import { Lora, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 
 const fontSans = PT_Sans({
   subsets: ['latin'],
@@ -49,7 +49,7 @@ function AppLayout({
 
   return (
     <div className={cn(
-        "min-h-screen bg-background font-sans antialiased flex flex-col",
+        "min-h-screen bg-background antialiased flex flex-col",
       )}>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -130,7 +130,7 @@ export default function RootLayout({
         <title>DharmaJyoti - Your AI-powered legal assistant.</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={cn(fontSans.variable, fontLora.variable)}>
+      <body className={cn("font-sans", fontSans.variable, fontLora.variable)}>
         <LanguageProvider>
           <AppLayout>{children}</AppLayout>
         </LanguageProvider>
