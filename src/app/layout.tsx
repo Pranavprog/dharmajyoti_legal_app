@@ -1,4 +1,10 @@
 
+import type { Metadata } from 'next';
+import { PT_Sans, Lora } from 'next/font/google';
+import Link from 'next/link';
+import { ReactNode, useState } from 'react';
+import { usePathname } from 'next/navigation';
+
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { Logo } from '@/components/logo';
@@ -6,13 +12,10 @@ import { Button } from '@/components/ui/button';
 import { LanguageProvider } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useTranslations } from '@/hooks/use-translations';
-import { usePathname } from 'next/navigation';
-import { Lora, PT_Sans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
-import { useState, memo, ReactNode } from 'react';
-import Link from 'next/link';
+
 
 const fontSans = PT_Sans({
   subsets: ['latin'],
@@ -25,6 +28,12 @@ const fontLora = Lora({
   variable: '--font-lora',
 });
 
+export const metadata: Metadata = {
+    title: 'DharmaJyoti - Your AI-powered legal assistant.',
+    description: 'Decoding Hidden Agreements & Rewriting with Multilingual Accuracy for Justice, Your Own Trustworthy Insight',
+};
+
+// Client Component containing hooks and interactive elements
 function AppLayout({ children }: { children: ReactNode }) {
   'use client';
   
@@ -112,6 +121,8 @@ function AppLayout({ children }: { children: ReactNode }) {
   );
 }
 
+
+// Server Component: RootLayout
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -119,10 +130,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <title>DharmaJyoti - Your AI-powered legal assistant.</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
       <body className={cn("font-sans", fontSans.variable, fontLora.variable)}>
         <LanguageProvider>
           <AppLayout>{children}</AppLayout>
