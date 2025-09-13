@@ -27,7 +27,6 @@ const fontLora = Lora({
   variable: '--font-lora',
 });
 
-
 function AppLayout({
   children,
 }: Readonly<{
