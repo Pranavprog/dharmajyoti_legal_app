@@ -1,4 +1,6 @@
 
+'use client';
+
 import type { Metadata } from 'next';
 import { PT_Sans, Lora } from 'next/font/google';
 import Link from 'next/link';
@@ -16,7 +18,6 @@ import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
 
-
 const fontSans = PT_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
@@ -28,15 +29,8 @@ const fontLora = Lora({
   variable: '--font-lora',
 });
 
-export const metadata: Metadata = {
-    title: 'DharmaJyoti - Your AI-powered legal assistant.',
-    description: 'Decoding Hidden Agreements & Rewriting with Multilingual Accuracy for Justice, Your Own Trustworthy Insight',
-};
-
-// Client Component containing hooks and interactive elements
+// AppLayout is a Client Component because it uses client-side hooks
 function AppLayout({ children }: { children: ReactNode }) {
-  'use client';
-  
   const t = useTranslations();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -122,7 +116,7 @@ function AppLayout({ children }: { children: ReactNode }) {
 }
 
 
-// Server Component: RootLayout
+// RootLayout is a Server Component
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -130,6 +124,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>DharmaJyoti - Your AI-powered legal assistant.</title>
+        <meta name="description" content="Decoding Hidden Agreements & Rewriting with Multilingual Accuracy for Justice, Your Own Trustworthy Insight" />
+      </head>
       <body className={cn("font-sans", fontSans.variable, fontLora.variable)}>
         <LanguageProvider>
           <AppLayout>{children}</AppLayout>
