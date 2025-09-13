@@ -76,7 +76,7 @@
     @apply border-border;
   }
   html {
-    height: 100%;
+    overflow-y: auto;
   }
   body {
     @apply bg-background text-foreground;

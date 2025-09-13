@@ -132,7 +132,7 @@ export default function RootLayout({
         <title>DharmaJyoti - Your AI-powered legal assistant.</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body>
+      <body className={cn(fontSans.variable, fontLora.variable)}>
         <LanguageProvider>
           <AppLayout>{children}</AppLayout>
         </LanguageProvider>

@@ -6,7 +6,7 @@ import { Bot, Search, ShieldCheck, Star, Upload } from 'lucide-react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { useTranslations } from '@/hooks/use-translations';
 import { Guidebot } from '@/components/guidebot';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -91,7 +91,7 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ title, description, href, icon }: {title: string, description: string, href: string, icon: React.ReactNode}) {
+const FeatureCard = memo(function FeatureCard({ title, description, href, icon }: {title: string, description: string, href: string, icon: React.ReactNode}) {
   return (
     <Link href={href} className="group">
       <Card className="h-full bg-card/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
@@ -107,7 +107,7 @@ function FeatureCard({ title, description, href, icon }: {title: string, descrip
       </Card>
     </Link>
   );
-}
+});
 
 function StarRating() {
   const [rating, setRating] = useState(0);
