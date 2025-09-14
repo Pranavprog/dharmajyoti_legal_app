@@ -69,12 +69,29 @@ const interactiveLegalGuidanceFlow = ai.defineFlow(
     outputSchema: InteractiveLegalGuidanceOutputSchema,
   },
   async (input) => {
-    const {output} = await interactiveLegalGuidancePrompt(input);
-    
-    if (!output?.response) {
-       return { response: "I'm sorry, I couldn't process that. Could you try rephrasing?" };
+    const maxRetries = 3;
+    let attempt = 0;
+    while (attempt < maxRetries) {
+      try {
+        const {output} = await interactiveLegalGuidancePrompt(input);
+        if (!output?.response) {
+          throw new Error('No output received from the AI model.');
+        }
+        return output;
+      } catch (error) {
+        attempt++;
+        if (error instanceof Error && error.message.includes('503') && attempt < maxRetries) {
+          console.log(`Attempt ${attempt} failed with 503 error. Retrying in 1 second...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        } else {
+          console.error(`An error occurred on attempt ${attempt}:`, error);
+          if (error instanceof Error && error.message.includes('503')) {
+            return { response: "I'm sorry, the legal guidance service is currently overloaded. Please try again in a few moments." };
+          }
+          return { response: "I'm sorry, I couldn't process that. Could you try rephrasing?" };
+        }
+      }
     }
-    
-    return output;
+     return { response: "I'm sorry, I couldn't process that after multiple attempts. Could you try rephrasing?" };
   }
 );
